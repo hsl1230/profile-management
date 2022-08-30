@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class SubUserProfileDto extends BaseUserProfile {
         @JsonProperty(value = "primaryUserProfile", required = true)
         @Accessors(fluent = true)

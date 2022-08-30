@@ -3,7 +3,14 @@ package com.telus.dl.profilemanagement.service;
 import com.telus.dl.profilemanagement.document.PrimaryUserProfile;
 import com.telus.dl.profilemanagement.document.SubUserProfile;
 import com.telus.dl.profilemanagement.document.UserProfile;
-import com.telus.dl.profilemanagement.dto.*;
+import com.telus.dl.profilemanagement.dto.BaseUserProfile;
+import com.telus.dl.profilemanagement.dto.CreatePrimaryUserProfileRequest;
+import com.telus.dl.profilemanagement.dto.CreateSubUserProfileRequest;
+import com.telus.dl.profilemanagement.dto.HomeAddressDto;
+import com.telus.dl.profilemanagement.dto.PrimaryUserProfileDto;
+import com.telus.dl.profilemanagement.dto.ProfileStatus;
+import com.telus.dl.profilemanagement.dto.SubUserProfileDto;
+import com.telus.dl.profilemanagement.dto.UpdateUserProfileRequest;
 import com.telus.dl.profilemanagement.repository.PrimaryUserProfileRepository;
 import com.telus.dl.profilemanagement.repository.SubUserProfileRepository;
 import com.telus.dl.profilemanagement.repository.UserProfileRepository;
@@ -25,28 +32,30 @@ public class UserProfileService {
     private final PrimaryUserProfileRepository primaryUserProfileRepository;
     private final SubUserProfileRepository subUserProfileRepository;
     private final MongoTemplate mongoTemplate;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public UserProfileService(
             UserProfileRepository userProfileRepository,
             PrimaryUserProfileRepository primaryUserProfileRepository,
             SubUserProfileRepository subUserProfileRepository,
-            MongoTemplate mongoTemplate) {
+            MongoTemplate mongoTemplate,
+            ModelMapper modelMapper) {
         this.userProfileRepository = userProfileRepository;
         this.primaryUserProfileRepository = primaryUserProfileRepository;
         this.subUserProfileRepository = subUserProfileRepository;
         this.mongoTemplate = mongoTemplate;
+        this.modelMapper = modelMapper;
     }
 
     public List<BaseUserProfile> getUserProfilesByMytelusId(String myTelusId) {
         List<UserProfile> list = userProfileRepository.findByMyTelusId(myTelusId);
         List<BaseUserProfile> result = new ArrayList<>();
-        ModelMapper mapper = new ModelMapper();
         list.forEach(userProfile -> {
             if (userProfile instanceof PrimaryUserProfile) {
-                result.add(mapper.map(userProfile, PrimaryUserProfileDto.class));
+                result.add(modelMapper.map(userProfile, PrimaryUserProfileDto.class));
             } else {
-                SubUserProfileDto subUserProfileDto = mapper.map(userProfile, SubUserProfileDto.class);
+                SubUserProfileDto subUserProfileDto = modelMapper.map(userProfile, SubUserProfileDto.class);
 
                 subUserProfileDto.primaryUserProfile(
                         findPrimaryUserProfileById(
@@ -65,49 +74,46 @@ public class UserProfileService {
         if (primaryUserProfile == null) {
             return null;
         } else {
-            ModelMapper mapper = new ModelMapper();
-            return mapper.map(primaryUserProfile, PrimaryUserProfileDto.class);
+            return modelMapper.map(primaryUserProfile, PrimaryUserProfileDto.class);
         }
     }
 
     public List<PrimaryUserProfileDto> getPrimaryUserProfilesByMytelusId(String myTelusId) {
-        ModelMapper mapper = new ModelMapper();
         return primaryUserProfileRepository
                 .findByMyTelusId(myTelusId).stream().map(
-                        primaryUserProfile -> mapper.map(primaryUserProfile, PrimaryUserProfileDto.class))
+                        primaryUserProfile -> modelMapper.map(primaryUserProfile, PrimaryUserProfileDto.class))
                 .toList();
     }
 
     public List<SubUserProfileDto> getSubUserProfilesByPrimaryUserProfileId(String primaryUserProfileId) {
-        ModelMapper mapper = new ModelMapper();
         PrimaryUserProfileDto primaryUserProfileDto = findPrimaryUserProfileById(primaryUserProfileId);
         return subUserProfileRepository
                 .findByPrimaryUserProfileId(primaryUserProfileId).stream().map(
-                        subUserProfile -> mapper.map(subUserProfile, SubUserProfileDto.class)
+                        subUserProfile -> modelMapper.map(subUserProfile, SubUserProfileDto.class)
                                 .primaryUserProfile(primaryUserProfileDto))
                 .toList();
     }
 
     public PrimaryUserProfileDto createPrimaryUserProfile(
             CreatePrimaryUserProfileRequest createPrimaryUserProfileRequest) {
-        ModelMapper mapper = new ModelMapper();
-        PrimaryUserProfile primaryUserProfile = mapper.map(createPrimaryUserProfileRequest, PrimaryUserProfile.class);
+        PrimaryUserProfile primaryUserProfile = modelMapper.map(createPrimaryUserProfileRequest, PrimaryUserProfile.class);
+        primaryUserProfile.setStatus(ProfileStatus.ACTIVE);
+
         primaryUserProfile = primaryUserProfileRepository.save(primaryUserProfile);
-        return mapper.map(primaryUserProfile, PrimaryUserProfileDto.class);
+        return modelMapper.map(primaryUserProfile, PrimaryUserProfileDto.class);
     }
 
     public SubUserProfileDto createSubUserProfile(
             String primaryUserProfileId,
             CreateSubUserProfileRequest createSubUserProfileRequest) {
-        ModelMapper mapper = new ModelMapper();
-        SubUserProfile subUserProfile = mapper.map(createSubUserProfileRequest, SubUserProfile.class);
-
+        SubUserProfile subUserProfile = modelMapper.map(createSubUserProfileRequest, SubUserProfile.class);
+        subUserProfile.setStatus(ProfileStatus.ACTIVE);
         subUserProfile.setPrimaryUserProfileId(primaryUserProfileId);
         subUserProfile = subUserProfileRepository.save(subUserProfile);
 
         PrimaryUserProfileDto primaryUserProfileDto = findPrimaryUserProfileById(primaryUserProfileId);
 
-        return mapper.map(subUserProfile, SubUserProfileDto.class).primaryUserProfile(primaryUserProfileDto);
+        return modelMapper.map(subUserProfile, SubUserProfileDto.class).primaryUserProfile(primaryUserProfileDto);
     }
 
     public void updateUserProfile(String userProfileId, UpdateUserProfileRequest updateUserProfileRequest) {
@@ -142,8 +148,7 @@ public class UserProfileService {
         query.addCriteria(Criteria.where("id").is(primaryUserProfileId));
         Update update = new Update();
 
-        ModelMapper mapper = new ModelMapper();
-        PrimaryUserProfile.HomeAddress homeAddress = mapper.map(homeAddressDto, PrimaryUserProfile.HomeAddress.class);
+        PrimaryUserProfile.HomeAddress homeAddress = modelMapper.map(homeAddressDto, PrimaryUserProfile.HomeAddress.class);
         update.set("homeAddress", homeAddress);
         mongoTemplate.updateFirst(query, update, PrimaryUserProfile.class);
     }
