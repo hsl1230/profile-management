@@ -1,0 +1,92 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.1'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'com.adarshr.test-logger' version '3.2.0'
+}
+
+group = 'com.telus.dl'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = "16"
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    testCommon {
+        java {
+            srcDir file('src/testCommon/java')
+        }
+        resources.srcDir file('src/testCommon/resources')
+    }
+    test {
+        java {
+            compileClasspath += testCommon.output
+            runtimeClasspath += testCommon.output
+        }
+    }
+    apiTest {
+        java {
+            compileClasspath += testCommon.output
+            runtimeClasspath += testCommon.output
+            srcDir file('src/apiTest/java')
+        }
+        resources.srcDir file('src/apiTest/resources')
+    }
+}
+
+configurations {
+    testCommonImplementation.extendsFrom testImplementation
+    testCommonRuntimeOnly.extendsFrom testRuntimeOnly
+    apiTestImplementation.extendsFrom testImplementation
+    apiTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+dependencies {
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.10'
+//    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'org.modelmapper:modelmapper:3.1.0'
+    implementation group: 'org.apache.commons', name: 'commons-csv', version: '1.9.0'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy'
+    }
+    testImplementation 'com.google.guava:guava:31.1-jre'
+    testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '5.1.1'
+    testImplementation group: 'io.rest-assured', name: 'json-path', version: '5.1.1'
+    testImplementation group: 'io.rest-assured', name: 'xml-path', version: '5.1.1'
+
+    apiTestImplementation project
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks {
+  processTestCommonResources {
+    duplicatesStrategy DuplicatesStrategy.EXCLUDE
+  }
+}
+
+task apiTest(type: Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+    useJUnitPlatform()
+
+    testClassesDirs = sourceSets.apiTest.output.classesDirs
+    classpath = sourceSets.apiTest.runtimeClasspath + sourceSets.apiTest.output
+
+    shouldRunAfter(tasks.named('test'))
+}
+
+tasks.named('check') {
+    dependsOn(tasks.named('apiTest'))
+}
+
+targetCompatibility = JavaVersion.VERSION_16
