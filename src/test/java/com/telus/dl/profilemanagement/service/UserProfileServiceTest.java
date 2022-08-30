@@ -1,6 +1,7 @@
 package com.telus.dl.profilemanagement.service;
 
 import com.telus.dl.profilemanagement.config.BusinessConfig;
+import com.telus.dl.profilemanagement.document.PrimaryUserProfile;
 import com.telus.dl.profilemanagement.dto.CreatePrimaryUserProfileRequest;
 import com.telus.dl.profilemanagement.dto.HomeAddressDto;
 import com.telus.dl.profilemanagement.repository.PrimaryUserProfileRepository;
@@ -16,6 +17,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.lang.reflect.InvocationTargetException;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
@@ -43,9 +45,9 @@ public class UserProfileServiceTest {
 				subUserProfileRepository,
 				mongoTemplate,
 				modelMapper);
-//		when(userProfileService.createPrimaryUserProfile(any(CreatePrimaryUserProfileRequest.class))).thenReturn(
-//				null
-//		);
+		when(primaryUserProfileRepository.save(any(PrimaryUserProfile.class))).thenReturn(
+				new PrimaryUserProfile()
+		);
 	}
 
 	@Test
@@ -62,7 +64,7 @@ public class UserProfileServiceTest {
 						.description("primary home")
 				);
 
-		assertNull(this.userProfileService.createPrimaryUserProfile(createPrimaryUserProfileRequest));
+		assertNotNull(this.userProfileService.createPrimaryUserProfile(createPrimaryUserProfileRequest));
 }
 
 }
