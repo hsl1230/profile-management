@@ -11,23 +11,15 @@ import javax.validation.constraints.NotNull;
 @Document(collection = "user_profile")
 @Getter
 @Setter
-public class UserProfile {
+public class LinkedUserProfile {
     @Id
     private String id;
 
     @NotNull
-    private String firstName;
-
-    private String middleName;
+    private String parentUserProfileId;
 
     @NotNull
-    private String lastName;
-
-    @NotNull
-    private String phoneNumber;
-
-    @NotNull
-    private String email;
+    private String ownerProfileId;
 
     @NotNull
     private UserProfileType userProfileType;
@@ -35,5 +27,4 @@ public class UserProfile {
     @NotNull
     private ProfileStatus status;
 
-    private String myTelusId;
 }

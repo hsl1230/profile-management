@@ -2,32 +2,7 @@ package com.telus.dl.profilemanagement.rest.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockMultipartFile;
-
-import com.telus.dl.profilemanagement.document.CreateDowJonesIndexRequest;
-import com.telus.dl.profilemanagement.document.DowJonesIndex;
-import com.telus.dl.profilemanagement.message.Response;
-import com.telus.dl.profilemanagement.service.CsvFileService;
-import com.telus.dl.profilemanagement.service.DowJonesIndexService;
-import com.telus.dl.profilemanagement.util.JsonLoaderUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 
 public class DowJonesIndexControllerTest {
 

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user-profiles")
+@RequestMapping("/api/profile-management/user-profiles")
 public class UserProfileController {
     private final UserProfileService userProfileService;
 
@@ -48,7 +48,7 @@ public class UserProfileController {
     public List<BaseUserProfile> getUserProfilesByMyTelusId(
             @Parameter(in = ParameterIn.PATH, description = "NyTelusUser Id")
             @PathVariable("myTelusId") String myTelusId) {
-        return userProfileService.getUserProfilesByMytelusId(myTelusId);
+        return userProfileService.getUserProfilesByMyTelusId(myTelusId);
     }
 
     @Operation(
@@ -75,28 +75,13 @@ public class UserProfileController {
     public List<PrimaryUserProfileDto> getPrimaryUserProfilesByMyTelusId(
             @Parameter(in = ParameterIn.PATH, description = "NyTelusUser Id")
             @PathVariable("myTelusId") String myTelusId) {
-        return userProfileService.getPrimaryUserProfilesByMytelusId(myTelusId);
+        return userProfileService.findPrimaryUserProfilesByMyTelusId(myTelusId);
     }
 
     @Operation(
             tags = {"User Profile"},
-            summary = "get a list of primary user profiles related to the specified myTelusId",
-            description = "a list of primary user profiles.",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "a list of primary user profiles owned by a my telus user",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    array = @ArraySchema(
-                                            schema = @Schema(
-                                                    implementation = SubUserProfileDto.class,
-                                                    type = "object"
-                                            )
-                                    )
-                            )
-                    )
-            }
+            summary = "get a list of sub user profiles owned the specified primary user profile",
+            description = "a list of sub user profiles."
     )
     @GetMapping("/primary-user-profiles/{primaryUserProfileId}/sub-user-profiles")
     public List<SubUserProfileDto> getSubUserProfilesOfPrimaryUserProfile(
@@ -108,7 +93,7 @@ public class UserProfileController {
     @Operation(
             tags = {"User Profile"},
             summary = "Create a primary user profile with home address",
-            description = "create the primary user profile and home address at the same time. the primary user profile will be the owner of all verticals of the same home address"
+            description = "create s primary user profile and home address at the same time. the primary user profile will be the owner of all verticals of the same home address"
     )
     @PostMapping("primary-user-profiles")
     public PrimaryUserProfileDto createPrimaryUserProfile(
@@ -126,12 +111,13 @@ public class UserProfileController {
     public void updateHomeAddress(
             @RequestBody() HomeAddressDto homeAddressDto,
             @Parameter(in = ParameterIn.PATH, description = "id of the primary user profile")
-            @PathVariable(value = "primaryUserProfileId", required = true) String primaryUserProfileId
+            @PathVariable(value = "primaryUserProfileId") String primaryUserProfileId
     ) {
         userProfileService.updateHomeAddress(primaryUserProfileId, homeAddressDto);
     }
 
     @Operation(
+            tags = {"User Profile"},
             summary = "Create a sub user profile",
             description = "the sub user profile will be shared by all verticals."
     )
@@ -139,12 +125,13 @@ public class UserProfileController {
     public SubUserProfileDto createSubUserProfile(
             @RequestBody() CreateSubUserProfileRequest createSubUserProfileRequest,
             @Parameter(in = ParameterIn.PATH, description = "id of the primary user profile")
-            @PathVariable(value = "primaryUserProfileId", required = true) String primaryUserProfileId
+            @PathVariable(value = "primaryUserProfileId") String primaryUserProfileId
     ) {
         return userProfileService.createSubUserProfile(primaryUserProfileId, createSubUserProfileRequest);
     }
 
     @Operation(
+            tags = {"User Profile"},
             summary = "bind a myTelusId with the sub user profile",
             description = "it can be called when an invitee accepts an invitation."
     )
@@ -152,24 +139,26 @@ public class UserProfileController {
     public void bindMyTelusId(
             @RequestBody() BindMyTelusIdRequest bindMyTelusIdRequest,
             @Parameter(in = ParameterIn.PATH, description = "id of the sub user profile")
-            @PathVariable(value = "subUserProfileId", required = true) String subUserProfileId
+            @PathVariable(value = "subUserProfileId") String subUserProfileId
     ) {
         userProfileService.bindMyTelusId(subUserProfileId, bindMyTelusIdRequest.myTelusId());
     }
 
     @Operation(
+            tags = {"User Profile"},
             summary = "remove the sub user profile from all verticals",
             description = "just mark the status as DELETED."
     )
     @DeleteMapping("sub-user-profiles/{subUserProfileId}")
     private void removeSubUserProfile(
             @Parameter(in = ParameterIn.PATH, description = "id of the sub user profile")
-            @PathVariable(value = "subUserProfileId", required = true) String subUserProfileId
+            @PathVariable(value = "subUserProfileId") String subUserProfileId
     ) {
         userProfileService.removeSubUserProfile(subUserProfileId);
     }
 
     @Operation(
+            tags = {"User Profile"},
             summary = "update a primary / sub user profile",
             description =
                     "the same endpoint can be used to update the primary user profile and sub user profile."
@@ -178,7 +167,7 @@ public class UserProfileController {
     public void updateUserProfile(
             @RequestBody() UpdateUserProfileRequest updateUserProfileRequest,
             @Parameter(in = ParameterIn.PATH, description = "can be id of a primary as well as sub user profile")
-            @PathVariable(value = "UserProfileId", required = true) String userProfileId) {
+            @PathVariable(value = "userProfileId") String userProfileId) {
         userProfileService.updateUserProfile(userProfileId, updateUserProfileRequest);
     }
 }

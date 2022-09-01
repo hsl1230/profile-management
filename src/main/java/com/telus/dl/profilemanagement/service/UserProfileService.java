@@ -48,8 +48,10 @@ public class UserProfileService {
         this.modelMapper = modelMapper;
     }
 
-    public List<BaseUserProfile> getUserProfilesByMytelusId(String myTelusId) {
-        List<UserProfile> list = userProfileRepository.findByMyTelusId(myTelusId);
+    public List<BaseUserProfile> getUserProfilesByMyTelusId(String myTelusId) {
+        List<UserProfile> list = mongoTemplate.find(
+                new Query().addCriteria(Criteria.where("myTelusId").is(myTelusId)),
+                UserProfile.class);
         List<BaseUserProfile> result = new ArrayList<>();
         list.forEach(userProfile -> {
             if (userProfile instanceof PrimaryUserProfile) {
@@ -70,7 +72,7 @@ public class UserProfileService {
     }
 
     private PrimaryUserProfileDto findPrimaryUserProfileById(String id) {
-        PrimaryUserProfile primaryUserProfile = primaryUserProfileRepository.findById(id).orElse(null);
+        PrimaryUserProfile primaryUserProfile = mongoTemplate.findById(id, PrimaryUserProfile.class);
         if (primaryUserProfile == null) {
             return null;
         } else {
@@ -78,7 +80,7 @@ public class UserProfileService {
         }
     }
 
-    public List<PrimaryUserProfileDto> getPrimaryUserProfilesByMytelusId(String myTelusId) {
+    public List<PrimaryUserProfileDto> findPrimaryUserProfilesByMyTelusId(String myTelusId) {
         return primaryUserProfileRepository
                 .findByMyTelusId(myTelusId).stream().map(
                         primaryUserProfile -> modelMapper.map(primaryUserProfile, PrimaryUserProfileDto.class))

@@ -9,5 +9,4 @@ import java.util.Optional;
 public interface SubUserProfileRepository extends MongoRepository<SubUserProfile, String> {
     List<SubUserProfile> findByMyTelusId(String myTelusId);
     List<SubUserProfile> findByPrimaryUserProfileId(String primaryUserProfileId);
-    Optional<SubUserProfile> findById(String id);
 }

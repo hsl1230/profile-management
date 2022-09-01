@@ -10,7 +10,9 @@ import com.telus.dl.profilemanagement.repository.UserProfileRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -18,8 +20,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import java.lang.reflect.InvocationTargetException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class UserProfileServiceTest {
@@ -31,20 +33,17 @@ public class UserProfileServiceTest {
 	private SubUserProfileRepository subUserProfileRepository;
 	@Mock
 	private MongoTemplate mongoTemplate;
+	@Spy
+	private ModelMapper modelMapper = new BusinessConfig().modelMapper();
 
-	private ModelMapper modelMapper;
-
+	@InjectMocks
 	private UserProfileService userProfileService;
+
+	public UserProfileServiceTest() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+	}
 
 	@BeforeEach
 	public void setUp() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-		this.modelMapper = new BusinessConfig().modelMapper();
-		this.userProfileService = new UserProfileService(
-				userProfileRepository,
-				primaryUserProfileRepository,
-				subUserProfileRepository,
-				mongoTemplate,
-				modelMapper);
 		when(primaryUserProfileRepository.save(any(PrimaryUserProfile.class))).thenReturn(
 				new PrimaryUserProfile()
 		);

@@ -1,5 +1,6 @@
 package com.telus.dl.profilemanagement.document;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,7 +8,10 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class SubUserProfile extends UserProfile {
+@Builder
+public class VerticalRoleId {
     @NotNull
-    private String primaryUserProfileId;
+    private String verticalId;
+    @NotNull
+    private String roleCode;
 }
