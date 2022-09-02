@@ -52,7 +52,7 @@ public class UserProfileController {
     }
 
     @Operation(
-            tags = {"User Profile"},
+            tags = {"Primary User Profile"},
             summary = "get a list of primary user profiles related to the specified myTelusId",
             description = "a list of primary user profiles.",
             responses = {
@@ -71,7 +71,7 @@ public class UserProfileController {
                     )
             }
     )
-    @GetMapping("/primary-user-profiles/{myTelusId}")
+    @GetMapping("/{myTelusId}/primary-user-profiles")
     public List<PrimaryUserProfileDto> getPrimaryUserProfilesByMyTelusId(
             @Parameter(in = ParameterIn.PATH, description = "NyTelusUser Id")
             @PathVariable("myTelusId") String myTelusId) {
@@ -79,7 +79,7 @@ public class UserProfileController {
     }
 
     @Operation(
-            tags = {"User Profile"},
+            tags = {"Sub User Profile", "Primary User Profile"},
             summary = "get a list of sub user profiles owned the specified primary user profile",
             description = "a list of sub user profiles."
     )
@@ -91,7 +91,7 @@ public class UserProfileController {
     }
 
     @Operation(
-            tags = {"User Profile"},
+            tags = {"Primary User Profile"},
             summary = "Create a primary user profile with home address",
             description = "create s primary user profile and home address at the same time. the primary user profile will be the owner of all verticals of the same home address"
     )
@@ -102,7 +102,7 @@ public class UserProfileController {
     }
 
     @Operation(
-            tags = {"User Profile"},
+            tags = {"Primary User Profile"},
             summary = "update home address of the primary user profile",
             description =
                     "home address and primary user profile has a one one relationship, so primaryUserProfileId can be used to identify a home address."
@@ -117,7 +117,7 @@ public class UserProfileController {
     }
 
     @Operation(
-            tags = {"User Profile"},
+            tags = {"Sub User Profile", "Primary User Profile"},
             summary = "Create a sub user profile",
             description = "the sub user profile will be shared by all verticals."
     )
@@ -131,45 +131,43 @@ public class UserProfileController {
     }
 
     @Operation(
-            tags = {"User Profile"},
+            tags = {"User Profile", "User Profile Link"},
             summary = "Create a user profile link",
-            description = "the user profile link will be shared by all verticals."
+            description = "Link from a primary user profile or sub user profile to another primary user profile."
     )
-    @PostMapping("/sub-user-profiles/{subUserProfileId}/user-profile-links")
+    @PostMapping("/{userProfileId}/user-profile-links")
     public UserProfileLinkDto createUserProfileLink(
             @Parameter(in = ParameterIn.PATH, description = "id of the linked user profile")
-            @PathVariable(value = "subUserProfileId") String linkedUserProfileId,
+            @PathVariable(value = "userProfileId") String linkedUserProfileId,
             @RequestBody() String primaryUserProfileId) {
-        return userProfileService.createLinkedUserProfile(primaryUserProfileId, linkedUserProfileId);
+        return userProfileService.createUserProfileLink(primaryUserProfileId, linkedUserProfileId);
     }
 
     @Operation(
-            tags = {"User Profile"},
+            tags = {"User Profile", "User Profile Link"},
             summary = "get a list of sub user profiles owned the specified primary user profile",
             description = "a list of sub user profiles."
     )
-    @GetMapping("/sub-user-profiles/{subUserProfileId}/user-profile-links")
+    @GetMapping("/{userProfileId}/user-profile-links")
     public List<UserProfileLinkDto> findUserProfileLinks(
             @Parameter(in = ParameterIn.PATH, description = "id of the linked user profile")
-            @PathVariable(value = "subUserProfileId") String linkedUserProfileId) {
+            @PathVariable(value = "userProfileId") String linkedUserProfileId) {
         return userProfileService.findLinkedUserProfiles(linkedUserProfileId);
     }
 
     @Operation(
             tags = {"User Profile"},
-            summary = "remove a user profile link"
+            summary = "remove a user profile including primary user profile, sub user profile and user profile link"
     )
-    @DeleteMapping("/sub-user-profiles/{subUserProfileId}/user-profile-links/{userProfileLinkId}")
-    public void findUserProfileLinks(
-            @Parameter(in = ParameterIn.PATH, description = "id of the linked user profile")
-            @PathVariable(value = "subUserProfileId") String linkedUserProfileId,
-            @Parameter(in = ParameterIn.PATH, description = "id of the user profile link")
-            @PathVariable(value = "userProfileLinkId") String userProfileLinkId) {
-        userProfileService.removeUserProfileLink(userProfileLinkId);
+    @DeleteMapping("/{userProfileId}")
+    public void removeUserProfile(
+            @Parameter(in = ParameterIn.PATH, description = "id of user profile")
+            @PathVariable(value = "userProfileId") String userProfileId) {
+        userProfileService.removeUserProfile(userProfileId);
     }
 
     @Operation(
-            tags = {"User Profile"},
+            tags = {"Sub User Profile"},
             summary = "bind a myTelusId with the sub user profile",
             description = "it can be called when an invitee accepts an invitation."
     )
@@ -180,19 +178,6 @@ public class UserProfileController {
             @PathVariable(value = "subUserProfileId") String subUserProfileId
     ) {
         userProfileService.bindMyTelusId(subUserProfileId, bindMyTelusIdRequest.myTelusId());
-    }
-
-    @Operation(
-            tags = {"User Profile"},
-            summary = "remove the sub user profile from all verticals",
-            description = "just mark the status as DELETED."
-    )
-    @DeleteMapping("/sub-user-profiles/{subUserProfileId}")
-    private void removeSubUserProfile(
-            @Parameter(in = ParameterIn.PATH, description = "id of the sub user profile")
-            @PathVariable(value = "subUserProfileId") String subUserProfileId
-    ) {
-        userProfileService.removeSubUserProfile(subUserProfileId);
     }
 
     @Operation(

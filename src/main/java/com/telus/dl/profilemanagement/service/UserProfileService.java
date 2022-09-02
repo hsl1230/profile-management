@@ -121,7 +121,7 @@ public class UserProfileService {
                 .primaryUserProfile((PrimaryUserProfileDto)new PrimaryUserProfileDto().id(primaryUserProfileId));
     }
 
-    public UserProfileLinkDto createLinkedUserProfile(String primaryUserProfileId, String linkedUserProfileId) {
+    public UserProfileLinkDto createUserProfileLink(String primaryUserProfileId, String linkedUserProfileId) {
         UserProfileLink userProfileLink = new UserProfileLink()
                 .primaryUserProfileId(primaryUserProfileId)
                 .linkedUserProfileId(linkedUserProfileId)
@@ -140,19 +140,14 @@ public class UserProfileService {
                         .is(UserProfileType.LINK)), UserProfileLink.class)
                 .stream()
                 .map(userProfileLink -> modelMapper.map(userProfileLink, UserProfileLinkDto.class)
-                        .primaryUserProfile(findPrimaryUserProfileById(userProfileLink.primaryUserProfileId()))
-                        .linkedUserProfile(
-                                (SubUserProfileDto)new SubUserProfileDto().id(userProfileLink.linkedUserProfileId())
-                        ))
+                        .primaryUserProfile(findPrimaryUserProfileById(userProfileLink.primaryUserProfileId())))
                 .toList();
     }
 
-    public void removeUserProfileLink(String userProfileLinkId) {
+    public void removeUserProfile(String userProfileId) {
         mongoTemplate.remove(new Query().addCriteria(Criteria
                 .where("id")
-                .is(userProfileLinkId)
-                .and("userProfileType")
-                .is(UserProfileType.LINK)), UserProfileLink.class);
+                .is(userProfileId)), UserProfile.class);
     }
 
     public void updateUserProfile(String userProfileId, UpdateUserProfileRequest updateUserProfileRequest) {
@@ -199,13 +194,5 @@ public class UserProfileService {
                 .is(primaryUserProfileId)
                 .and("userProfileType")
                 .is(UserProfileType.PRIMARY)), update, PrimaryUserProfile.class);
-    }
-
-    public void removeSubUserProfile(String subUserProfileId) {
-        mongoTemplate.remove(new Query().addCriteria(Criteria
-                .where("id")
-                .is(subUserProfileId)
-                .and("userProfileType")
-                .is(UserProfileType.SUB)), SubUserProfile.class);
     }
 }
