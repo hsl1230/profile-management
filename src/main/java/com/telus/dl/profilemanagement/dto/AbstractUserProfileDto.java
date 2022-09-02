@@ -15,13 +15,14 @@ public abstract class AbstractUserProfileDto {
     @JsonProperty(value = "id", required = true)
     private String id;
 
-    @JsonProperty(value = "status", required = true)
+    @JsonProperty(value = "userProfileType", required = true)
     @Setter(AccessLevel.PROTECTED)
     private UserProfileType userProfileType;
 
-    @JsonProperty(required = true)
+    @JsonProperty(value = "firstName", required = true)
     private String firstName;
 
+    @JsonProperty(value = "middleName", required = true)
     private String middleName;
 
     @JsonProperty(value = "lastName", required = true)

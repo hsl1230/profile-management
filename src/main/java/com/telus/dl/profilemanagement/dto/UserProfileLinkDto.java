@@ -14,7 +14,7 @@ public class UserProfileLinkDto {
     @JsonProperty(value = "id", required = true)
     private String id;
 
-    @JsonProperty(value = "status", required = true)
+    @JsonProperty(value = "userProfileType", required = true)
     @Setter(AccessLevel.PROTECTED)
     private UserProfileType userProfileType;
 

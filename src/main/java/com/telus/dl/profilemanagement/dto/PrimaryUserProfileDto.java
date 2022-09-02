@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 public class PrimaryUserProfileDto extends AbstractUserProfileDto {
-    @JsonProperty(value = "homeAddress", required = true)
+    @JsonProperty(value = "property", required = true)
     @Accessors(fluent = true)
     private PropertyDto property;
 }
