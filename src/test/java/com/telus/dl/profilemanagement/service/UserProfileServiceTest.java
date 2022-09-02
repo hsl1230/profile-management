@@ -3,10 +3,7 @@ package com.telus.dl.profilemanagement.service;
 import com.telus.dl.profilemanagement.config.BusinessConfig;
 import com.telus.dl.profilemanagement.document.PrimaryUserProfile;
 import com.telus.dl.profilemanagement.dto.CreatePrimaryUserProfileRequest;
-import com.telus.dl.profilemanagement.dto.HomeAddressDto;
-import com.telus.dl.profilemanagement.repository.PrimaryUserProfileRepository;
-import com.telus.dl.profilemanagement.repository.SubUserProfileRepository;
-import com.telus.dl.profilemanagement.repository.UserProfileRepository;
+import com.telus.dl.profilemanagement.dto.PropertyDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,12 +23,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class UserProfileServiceTest {
 	@Mock
-	private UserProfileRepository userProfileRepository;
-	@Mock
-	private PrimaryUserProfileRepository primaryUserProfileRepository;
-	@Mock
-	private SubUserProfileRepository subUserProfileRepository;
-	@Mock
 	private MongoTemplate mongoTemplate;
 	@Spy
 	private ModelMapper modelMapper = new BusinessConfig().modelMapper();
@@ -44,7 +35,7 @@ public class UserProfileServiceTest {
 
 	@BeforeEach
 	public void setUp() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-		when(primaryUserProfileRepository.save(any(PrimaryUserProfile.class))).thenReturn(
+		when(mongoTemplate.insert(any(PrimaryUserProfile.class))).thenReturn(
 				new PrimaryUserProfile()
 		);
 	}
@@ -57,13 +48,16 @@ public class UserProfileServiceTest {
 				.email("henry.huang@telus.com")
 				.phoneNumber("4039266729")
 				.myTelusId("T982127")
-				.homeAddress(new HomeAddressDto()
+				.property(new PropertyDto()
 						.name("home1")
-						.address("191 mt reliant pl")
+						.street("191 mt reliant")
+						.city("calgary")
+						.province("alberta")
+						.country("canada")
+						.postCode("T2Z 2G2")
 						.description("primary home")
 				);
 
 		assertNotNull(this.userProfileService.createPrimaryUserProfile(createPrimaryUserProfileRequest));
-}
-
+	}
 }

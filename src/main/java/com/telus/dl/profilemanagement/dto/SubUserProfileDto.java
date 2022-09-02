@@ -11,8 +11,8 @@ import lombok.experimental.Accessors;
 @Setter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class SubUserProfileDto extends BaseUserProfile {
-        @JsonProperty(value = "primaryUserProfile", required = true)
+public class SubUserProfileDto extends AbstractUserProfileDto {
+        @JsonProperty(value = "primaryUserProfile")
         @Accessors(fluent = true)
         private PrimaryUserProfileDto primaryUserProfile;
 }

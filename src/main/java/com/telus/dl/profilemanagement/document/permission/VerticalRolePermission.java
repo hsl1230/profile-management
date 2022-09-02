@@ -3,6 +3,7 @@ package com.telus.dl.profilemanagement.document.permission;
 import com.telus.dl.profilemanagement.document.VerticalRoleId;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotNull;
 @Document(collection = "vertical-role-permission")
 @Getter
 @Setter
+@Accessors(fluent = true)
 public class VerticalRolePermission {
     @Id
     private String id;
@@ -24,9 +26,4 @@ public class VerticalRolePermission {
     private PeriodOfTime periodOfTime;
     private PeriodOfDate periodOfDate;
     private EffectiveDates effectiveDates;
-
-    public VerticalRolePermission verticalRoleId(VerticalRoleId verticalRoleId) {
-        this.verticalRoleId = verticalRoleId;
-        return this;
-    }
 }

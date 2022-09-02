@@ -8,9 +8,13 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class PrimaryUserProfile extends UserProfile {
+    public PrimaryUserProfile() {
+        this.setUserProfileType(UserProfileType.PRIMARY);
+    }
+
     @Getter
     @Setter
-    public static class HomeAddress {
+    public static class Property {
         @NotNull
         private String name;
         @NotNull
@@ -35,5 +39,5 @@ public class PrimaryUserProfile extends UserProfile {
     }
 
     @NotNull
-    private HomeAddress homeAddress;
+    private PrimaryUserProfile.Property property;
 }

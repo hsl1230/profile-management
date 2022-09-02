@@ -1,19 +1,19 @@
 package com.telus.dl.profilemanagement.service;
 
+import com.telus.dl.profilemanagement.document.UserProfileLink;
 import com.telus.dl.profilemanagement.document.PrimaryUserProfile;
 import com.telus.dl.profilemanagement.document.SubUserProfile;
 import com.telus.dl.profilemanagement.document.UserProfile;
-import com.telus.dl.profilemanagement.dto.BaseUserProfile;
+import com.telus.dl.profilemanagement.document.UserProfileType;
+import com.telus.dl.profilemanagement.dto.AbstractUserProfileDto;
 import com.telus.dl.profilemanagement.dto.CreatePrimaryUserProfileRequest;
 import com.telus.dl.profilemanagement.dto.CreateSubUserProfileRequest;
-import com.telus.dl.profilemanagement.dto.HomeAddressDto;
+import com.telus.dl.profilemanagement.dto.PropertyDto;
 import com.telus.dl.profilemanagement.dto.PrimaryUserProfileDto;
 import com.telus.dl.profilemanagement.dto.ProfileStatus;
 import com.telus.dl.profilemanagement.dto.SubUserProfileDto;
 import com.telus.dl.profilemanagement.dto.UpdateUserProfileRequest;
-import com.telus.dl.profilemanagement.repository.PrimaryUserProfileRepository;
-import com.telus.dl.profilemanagement.repository.SubUserProfileRepository;
-import com.telus.dl.profilemanagement.repository.UserProfileRepository;
+import com.telus.dl.profilemanagement.dto.UserProfileLinkDto;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,31 +28,22 @@ import java.util.List;
 
 @Service
 public class UserProfileService {
-    private final UserProfileRepository userProfileRepository;
-    private final PrimaryUserProfileRepository primaryUserProfileRepository;
-    private final SubUserProfileRepository subUserProfileRepository;
     private final MongoTemplate mongoTemplate;
     private final ModelMapper modelMapper;
 
     @Autowired
     public UserProfileService(
-            UserProfileRepository userProfileRepository,
-            PrimaryUserProfileRepository primaryUserProfileRepository,
-            SubUserProfileRepository subUserProfileRepository,
             MongoTemplate mongoTemplate,
             ModelMapper modelMapper) {
-        this.userProfileRepository = userProfileRepository;
-        this.primaryUserProfileRepository = primaryUserProfileRepository;
-        this.subUserProfileRepository = subUserProfileRepository;
         this.mongoTemplate = mongoTemplate;
         this.modelMapper = modelMapper;
     }
 
-    public List<BaseUserProfile> getUserProfilesByMyTelusId(String myTelusId) {
-        List<UserProfile> list = mongoTemplate.find(
-                new Query().addCriteria(Criteria.where("myTelusId").is(myTelusId)),
-                UserProfile.class);
-        List<BaseUserProfile> result = new ArrayList<>();
+    public List<AbstractUserProfileDto> findUserProfilesByMyTelusId(String myTelusId) {
+        List<UserProfile> list = mongoTemplate.find(new Query().addCriteria(Criteria
+                        .where("myTelusId")
+                        .is(myTelusId)), UserProfile.class);
+        List<AbstractUserProfileDto> result = new ArrayList<>();
         list.forEach(userProfile -> {
             if (userProfile instanceof PrimaryUserProfile) {
                 result.add(modelMapper.map(userProfile, PrimaryUserProfileDto.class));
@@ -72,7 +63,11 @@ public class UserProfileService {
     }
 
     private PrimaryUserProfileDto findPrimaryUserProfileById(String id) {
-        PrimaryUserProfile primaryUserProfile = mongoTemplate.findById(id, PrimaryUserProfile.class);
+        PrimaryUserProfile primaryUserProfile = mongoTemplate.findOne(new Query().addCriteria(Criteria
+                        .where("id")
+                        .is(id)
+                        .and("userProfileType")
+                        .is(UserProfileType.PRIMARY)), PrimaryUserProfile.class);
         if (primaryUserProfile == null) {
             return null;
         } else {
@@ -81,16 +76,24 @@ public class UserProfileService {
     }
 
     public List<PrimaryUserProfileDto> findPrimaryUserProfilesByMyTelusId(String myTelusId) {
-        return primaryUserProfileRepository
-                .findByMyTelusId(myTelusId).stream().map(
+        return mongoTemplate.find(new Query().addCriteria(Criteria
+                        .where("myTelusId")
+                        .is(myTelusId)
+                        .and("userProfileType")
+                        .is(UserProfileType.PRIMARY)), PrimaryUserProfile.class)
+                .stream().map(
                         primaryUserProfile -> modelMapper.map(primaryUserProfile, PrimaryUserProfileDto.class))
                 .toList();
     }
 
     public List<SubUserProfileDto> getSubUserProfilesByPrimaryUserProfileId(String primaryUserProfileId) {
         PrimaryUserProfileDto primaryUserProfileDto = findPrimaryUserProfileById(primaryUserProfileId);
-        return subUserProfileRepository
-                .findByPrimaryUserProfileId(primaryUserProfileId).stream().map(
+        return mongoTemplate.find(new Query().addCriteria(Criteria
+                        .where("primaryUserProfileId")
+                        .is(primaryUserProfileId)
+                        .and("userProfileType")
+                        .is(UserProfileType.SUB)), SubUserProfile.class)
+                .stream().map(
                         subUserProfile -> modelMapper.map(subUserProfile, SubUserProfileDto.class)
                                 .primaryUserProfile(primaryUserProfileDto))
                 .toList();
@@ -101,7 +104,7 @@ public class UserProfileService {
         PrimaryUserProfile primaryUserProfile = modelMapper.map(createPrimaryUserProfileRequest, PrimaryUserProfile.class);
         primaryUserProfile.setStatus(ProfileStatus.ACTIVE);
 
-        primaryUserProfile = primaryUserProfileRepository.save(primaryUserProfile);
+        primaryUserProfile = mongoTemplate.insert(primaryUserProfile);
         return modelMapper.map(primaryUserProfile, PrimaryUserProfileDto.class);
     }
 
@@ -111,19 +114,54 @@ public class UserProfileService {
         SubUserProfile subUserProfile = modelMapper.map(createSubUserProfileRequest, SubUserProfile.class);
         subUserProfile.setStatus(ProfileStatus.ACTIVE);
         subUserProfile.setPrimaryUserProfileId(primaryUserProfileId);
-        subUserProfile = subUserProfileRepository.save(subUserProfile);
 
-        PrimaryUserProfileDto primaryUserProfileDto = findPrimaryUserProfileById(primaryUserProfileId);
+        subUserProfile = mongoTemplate.insert(subUserProfile);
 
-        return modelMapper.map(subUserProfile, SubUserProfileDto.class).primaryUserProfile(primaryUserProfileDto);
+        return modelMapper.map(subUserProfile, SubUserProfileDto.class)
+                .primaryUserProfile((PrimaryUserProfileDto)new PrimaryUserProfileDto().id(primaryUserProfileId));
+    }
+
+    public UserProfileLinkDto createLinkedUserProfile(String primaryUserProfileId, String linkedUserProfileId) {
+        UserProfileLink userProfileLink = new UserProfileLink()
+                .primaryUserProfileId(primaryUserProfileId)
+                .linkedUserProfileId(linkedUserProfileId)
+                .status(ProfileStatus.ACTIVE);
+
+        userProfileLink = mongoTemplate.insert(userProfileLink);
+
+        return modelMapper.map(userProfileLink, UserProfileLinkDto.class);
+    }
+
+    public List<UserProfileLinkDto> findLinkedUserProfiles(String linkedUserProfileId) {
+        return mongoTemplate.find(new Query().addCriteria(Criteria
+                        .where("linkedUserProfileId")
+                        .is(linkedUserProfileId)
+                        .and("userProfileType")
+                        .is(UserProfileType.LINK)), UserProfileLink.class)
+                .stream()
+                .map(userProfileLink -> modelMapper.map(userProfileLink, UserProfileLinkDto.class)
+                        .primaryUserProfile(findPrimaryUserProfileById(userProfileLink.primaryUserProfileId()))
+                        .linkedUserProfile(
+                                (SubUserProfileDto)new SubUserProfileDto().id(userProfileLink.linkedUserProfileId())
+                        ))
+                .toList();
+    }
+
+    public void removeUserProfileLink(String userProfileLinkId) {
+        mongoTemplate.remove(new Query().addCriteria(Criteria
+                .where("id")
+                .is(userProfileLinkId)
+                .and("userProfileType")
+                .is(UserProfileType.LINK)), UserProfileLink.class);
     }
 
     public void updateUserProfile(String userProfileId, UpdateUserProfileRequest updateUserProfileRequest) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("id").is(userProfileId));
         Update update = new Update();
         if (StringUtils.isNotBlank(updateUserProfileRequest.firstName())) {
             update.set("firstName", updateUserProfileRequest.firstName());
+        }
+        if (StringUtils.isNotBlank(updateUserProfileRequest.middleName())) {
+            update.set("middleName", updateUserProfileRequest.middleName());
         }
         if (StringUtils.isNotBlank(updateUserProfileRequest.lastName())) {
             update.set("lastName", updateUserProfileRequest.lastName());
@@ -134,28 +172,40 @@ public class UserProfileService {
         if (StringUtils.isNotBlank(updateUserProfileRequest.email())) {
             update.set("email", updateUserProfileRequest.email());
         }
-        mongoTemplate.updateFirst(query, update, UserProfile.class);
+
+        mongoTemplate.updateFirst(new Query().addCriteria(Criteria
+                .where("id")
+                .is(userProfileId)
+                .and("userProfileType")
+                .in(UserProfileType.SUB, UserProfileType.PRIMARY)), update, UserProfile.class);
     }
 
     public void bindMyTelusId(String subUserProfileId, String myTelusId) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("id").is(subUserProfileId));
         Update update = new Update();
         update.set("myTelusId", myTelusId);
-        mongoTemplate.updateFirst(query, update, SubUserProfile.class);
+        mongoTemplate.updateFirst(new Query().addCriteria(Criteria
+                .where("id")
+                .is(subUserProfileId)
+                .and("userProfileType")
+                .is(UserProfileType.SUB)), update, SubUserProfile.class);
     }
 
-    public void updateHomeAddress(String primaryUserProfileId, HomeAddressDto homeAddressDto) {
-        Query query = new Query();
-        query.addCriteria(Criteria.where("id").is(primaryUserProfileId));
+    public void updateHomeAddress(String primaryUserProfileId, PropertyDto homeAddressDto) {
+        PrimaryUserProfile.Property homeAddress = modelMapper.map(homeAddressDto, PrimaryUserProfile.Property.class);
         Update update = new Update();
-
-        PrimaryUserProfile.HomeAddress homeAddress = modelMapper.map(homeAddressDto, PrimaryUserProfile.HomeAddress.class);
         update.set("homeAddress", homeAddress);
-        mongoTemplate.updateFirst(query, update, PrimaryUserProfile.class);
+        mongoTemplate.updateFirst(new Query().addCriteria(Criteria
+                .where("id")
+                .is(primaryUserProfileId)
+                .and("userProfileType")
+                .is(UserProfileType.PRIMARY)), update, PrimaryUserProfile.class);
     }
 
     public void removeSubUserProfile(String subUserProfileId) {
-        subUserProfileRepository.deleteById(subUserProfileId);
+        mongoTemplate.remove(new Query().addCriteria(Criteria
+                .where("id")
+                .is(subUserProfileId)
+                .and("userProfileType")
+                .is(UserProfileType.SUB)), SubUserProfile.class);
     }
 }

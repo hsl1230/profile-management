@@ -11,8 +11,8 @@ import lombok.experimental.Accessors;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public class PrimaryUserProfileDto extends BaseUserProfile {
+public class PrimaryUserProfileDto extends AbstractUserProfileDto {
     @JsonProperty(value = "homeAddress", required = true)
     @Accessors(fluent = true)
-    private HomeAddressDto homeAddress;
+    private PropertyDto property;
 }

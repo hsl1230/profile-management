@@ -8,6 +8,10 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class SubUserProfile extends UserProfile {
+    public SubUserProfile() {
+        this.setUserProfileType(UserProfileType.SUB);
+    }
+
     @NotNull
     private String primaryUserProfileId;
 }

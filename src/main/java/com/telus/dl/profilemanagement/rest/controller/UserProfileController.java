@@ -45,10 +45,10 @@ public class UserProfileController {
             }
     )
     @GetMapping("/{myTelusId}")
-    public List<BaseUserProfile> getUserProfilesByMyTelusId(
+    public List<AbstractUserProfileDto> getUserProfilesByMyTelusId(
             @Parameter(in = ParameterIn.PATH, description = "NyTelusUser Id")
             @PathVariable("myTelusId") String myTelusId) {
-        return userProfileService.getUserProfilesByMyTelusId(myTelusId);
+        return userProfileService.findUserProfilesByMyTelusId(myTelusId);
     }
 
     @Operation(
@@ -95,7 +95,7 @@ public class UserProfileController {
             summary = "Create a primary user profile with home address",
             description = "create s primary user profile and home address at the same time. the primary user profile will be the owner of all verticals of the same home address"
     )
-    @PostMapping("primary-user-profiles")
+    @PostMapping("/primary-user-profiles")
     public PrimaryUserProfileDto createPrimaryUserProfile(
             @RequestBody CreatePrimaryUserProfileRequest createPrimaryUserProfileRequest) {
         return userProfileService.createPrimaryUserProfile(createPrimaryUserProfileRequest);
@@ -107,9 +107,9 @@ public class UserProfileController {
             description =
                     "home address and primary user profile has a one one relationship, so primaryUserProfileId can be used to identify a home address."
     )
-    @PutMapping("primary-user-profiles/{primaryUserProfileId}/home-address")
+    @PutMapping("/primary-user-profiles/{primaryUserProfileId}/home-address")
     public void updateHomeAddress(
-            @RequestBody() HomeAddressDto homeAddressDto,
+            @RequestBody() PropertyDto homeAddressDto,
             @Parameter(in = ParameterIn.PATH, description = "id of the primary user profile")
             @PathVariable(value = "primaryUserProfileId") String primaryUserProfileId
     ) {
@@ -121,7 +121,7 @@ public class UserProfileController {
             summary = "Create a sub user profile",
             description = "the sub user profile will be shared by all verticals."
     )
-    @PostMapping("primary-user-profiles/{primaryUserProfileId}/sub-user-profiles")
+    @PostMapping("/primary-user-profiles/{primaryUserProfileId}/sub-user-profiles")
     public SubUserProfileDto createSubUserProfile(
             @RequestBody() CreateSubUserProfileRequest createSubUserProfileRequest,
             @Parameter(in = ParameterIn.PATH, description = "id of the primary user profile")
@@ -132,10 +132,48 @@ public class UserProfileController {
 
     @Operation(
             tags = {"User Profile"},
+            summary = "Create a user profile link",
+            description = "the user profile link will be shared by all verticals."
+    )
+    @PostMapping("/sub-user-profiles/{subUserProfileId}/user-profile-links")
+    public UserProfileLinkDto createUserProfileLink(
+            @Parameter(in = ParameterIn.PATH, description = "id of the linked user profile")
+            @PathVariable(value = "subUserProfileId") String linkedUserProfileId,
+            @RequestBody() String primaryUserProfileId) {
+        return userProfileService.createLinkedUserProfile(primaryUserProfileId, linkedUserProfileId);
+    }
+
+    @Operation(
+            tags = {"User Profile"},
+            summary = "get a list of sub user profiles owned the specified primary user profile",
+            description = "a list of sub user profiles."
+    )
+    @GetMapping("/sub-user-profiles/{subUserProfileId}/user-profile-links")
+    public List<UserProfileLinkDto> findUserProfileLinks(
+            @Parameter(in = ParameterIn.PATH, description = "id of the linked user profile")
+            @PathVariable(value = "subUserProfileId") String linkedUserProfileId) {
+        return userProfileService.findLinkedUserProfiles(linkedUserProfileId);
+    }
+
+    @Operation(
+            tags = {"User Profile"},
+            summary = "remove a user profile link"
+    )
+    @DeleteMapping("/sub-user-profiles/{subUserProfileId}/user-profile-links/{userProfileLinkId}")
+    public void findUserProfileLinks(
+            @Parameter(in = ParameterIn.PATH, description = "id of the linked user profile")
+            @PathVariable(value = "subUserProfileId") String linkedUserProfileId,
+            @Parameter(in = ParameterIn.PATH, description = "id of the user profile link")
+            @PathVariable(value = "userProfileLinkId") String userProfileLinkId) {
+        userProfileService.removeUserProfileLink(userProfileLinkId);
+    }
+
+    @Operation(
+            tags = {"User Profile"},
             summary = "bind a myTelusId with the sub user profile",
             description = "it can be called when an invitee accepts an invitation."
     )
-    @PutMapping("sub-user-profiles/{subUserProfileId}")
+    @PutMapping("/sub-user-profiles/{subUserProfileId}")
     public void bindMyTelusId(
             @RequestBody() BindMyTelusIdRequest bindMyTelusIdRequest,
             @Parameter(in = ParameterIn.PATH, description = "id of the sub user profile")
@@ -149,7 +187,7 @@ public class UserProfileController {
             summary = "remove the sub user profile from all verticals",
             description = "just mark the status as DELETED."
     )
-    @DeleteMapping("sub-user-profiles/{subUserProfileId}")
+    @DeleteMapping("/sub-user-profiles/{subUserProfileId}")
     private void removeSubUserProfile(
             @Parameter(in = ParameterIn.PATH, description = "id of the sub user profile")
             @PathVariable(value = "subUserProfileId") String subUserProfileId
@@ -163,7 +201,7 @@ public class UserProfileController {
             description =
                     "the same endpoint can be used to update the primary user profile and sub user profile."
     )
-    @PutMapping("{userProfileId}")
+    @PutMapping("/{userProfileId}")
     public void updateUserProfile(
             @RequestBody() UpdateUserProfileRequest updateUserProfileRequest,
             @Parameter(in = ParameterIn.PATH, description = "can be id of a primary as well as sub user profile")

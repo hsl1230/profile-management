@@ -1,8 +1,5 @@
 package com.telus.dl.profilemanagement.rest.controller;
 
-import com.telus.dl.profilemanagement.document.PrimaryUserProfile;
-import com.telus.dl.profilemanagement.repository.SubUserProfileRepository;
-import com.telus.dl.profilemanagement.repository.UserProfileRepository;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.telus.dl.profilemanagement.ProfileManagementApplication;
 
-import static io.restassured.RestAssured.given;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {
@@ -33,12 +29,6 @@ public class UserProfileControllerApiTest {
 	@InjectMocks
 	private UserProfileController dowJonesIndexService;
 
-	@Mock
-	private UserProfileRepository userProfileRepository;
-	@Mock
-	private PrimaryUserProfile primaryUserProfile;
-	@Mock
-	private SubUserProfileRepository subUserProfileRepository;
 	@Mock
 	private MongoTemplate mongoTemplate;
 

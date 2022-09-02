@@ -12,6 +12,10 @@ public class CreateSubUserProfileRequest {
     @Accessors(fluent = true)
     private String firstName;
 
+    @JsonProperty(value = "middleName")
+    @Accessors(fluent = true)
+    private String middleName;
+
     @JsonProperty(value = "lastName", required = true)
     @Accessors(fluent = true)
     private String lastName;

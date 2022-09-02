@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 @Getter
 @Setter
+@Accessors(fluent = true)
 public class BindMyTelusIdRequest {
     @JsonProperty(value = "myTelusId", required = true)
     @Accessors(fluent = true)

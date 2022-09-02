@@ -1,6 +1,7 @@
 package com.telus.dl.profilemanagement.document;
 
 import com.telus.dl.profilemanagement.dto.ProfileStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Document(collection = "user_profile")
 @Getter
 @Setter
-public class UserProfile {
+public abstract class UserProfile {
     @Id
     private String id;
 
@@ -30,6 +31,7 @@ public class UserProfile {
     private String email;
 
     @NotNull
+    @Setter(AccessLevel.PROTECTED)
     private UserProfileType userProfileType;
 
     @NotNull
