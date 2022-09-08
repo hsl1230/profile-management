@@ -8,6 +8,8 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.Parameter;
+import io.swagger.v3.oas.models.tags.Tag;
+
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +40,14 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI productApi() {
         return new OpenAPI()
+                .addTagsItem(new Tag().name("Primary User Profile"))
+                .addTagsItem(new Tag().name("Sub User Profile"))
+                .addTagsItem(new Tag().name("User Profile Link"))
+                .addTagsItem(new Tag().name("User Profile"))
+                .addTagsItem(new Tag().name("Vertical"))
+                .addTagsItem(new Tag().name("Vertical Role"))
+                .addTagsItem(new Tag().name("Vertical Role Permissions"))
+                .addTagsItem(new Tag().name("User Vertical Permissions"))
                 .info(apiInfo());
     }
 

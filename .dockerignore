@@ -1,10 +1,11 @@
 # compiled output
-/.history
-/.vscode
-/.build
-/.bin
 /.vscode
 /.gradle
+/.history
+/build
+/bin
+/volumes-dir/mongodb/data
+/volumes-dir/mongodb/log
 
 
 

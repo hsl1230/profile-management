@@ -47,7 +47,7 @@ Tested on docker compose version v2.6.1 on Ubuntu 22.04 LTS
 ## Clone the source code from github
 
 ```bash
-git clone https://github.com/hsl1230/stock-markets.git
+git clone https://github.com/hsl1230/profile-management.git
 ```
 
 ## Launch up the application

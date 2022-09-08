@@ -1,7 +1,11 @@
 .gradle
 /build/
 .idea
+.history
 /bin/
+/volumes-dir/mongodb/data
+/volumes-dir/mongodb/log
+
 
 # Ignore Gradle GUI config
 gradle-app.setting
