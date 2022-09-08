@@ -22,7 +22,7 @@ public abstract class AbstractUserProfileDto {
     @JsonProperty(value = "firstName", required = true)
     private String firstName;
 
-    @JsonProperty(value = "middleName", required = true)
+    @JsonProperty(value = "middleName")
     private String middleName;
 
     @JsonProperty(value = "lastName", required = true)
