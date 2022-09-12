@@ -1,16 +1,22 @@
 package com.telus.core.errorhandling.errorhandler;
 
-import com.mongodb.MongoTimeoutException;
 import com.telus.core.errorhandling.ErrorCode;
 import com.telus.core.errorhandling.PlatformErrorCode;
+import com.telus.core.errorhandling.exception.PlatformException;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpStatus;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ErrorHandler
-public class MongoTimeoutExceptionHandler extends AbstractExceptionHandler {
+public class DataAccessResourceFailureExceptionHandler extends AbstractExceptionHandler {
 
 	@Override
-	public Class<? extends Throwable> exceptionClass() {
-		return MongoTimeoutException.class;
+	public List<Class<? extends Throwable>> exceptionClasses() {
+		List<Class<? extends Throwable>> classes = new ArrayList<>();
+		classes.add(DataAccessResourceFailureException.class);
+		return classes;
 	}
 
 	@Override

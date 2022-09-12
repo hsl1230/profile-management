@@ -1,6 +1,14 @@
 package com.telus.dl.profilemanagement.rest.controller;
 
-import com.telus.dl.profilemanagement.dto.*;
+import com.telus.dl.profilemanagement.dto.AbstractUserProfileDto;
+import com.telus.dl.profilemanagement.dto.BindMyTelusIdRequest;
+import com.telus.dl.profilemanagement.dto.CreatePrimaryUserProfileRequest;
+import com.telus.dl.profilemanagement.dto.CreateSubUserProfileRequest;
+import com.telus.dl.profilemanagement.dto.PrimaryUserProfileDto;
+import com.telus.dl.profilemanagement.dto.PropertyDto;
+import com.telus.dl.profilemanagement.dto.SubUserProfileDto;
+import com.telus.dl.profilemanagement.dto.UpdateUserProfileRequest;
+import com.telus.dl.profilemanagement.dto.UserProfileLinkDto;
 import com.telus.dl.profilemanagement.service.UserProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -10,12 +18,22 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/profile-management/user-profiles")
+@Validated
 public class UserProfileController {
     private final UserProfileService userProfileService;
 
@@ -47,7 +65,7 @@ public class UserProfileController {
     @GetMapping("/{myTelusId}")
     public List<AbstractUserProfileDto> getUserProfilesByMyTelusId(
             @Parameter(in = ParameterIn.PATH, description = "NyTelusUser Id")
-            @PathVariable("myTelusId") String myTelusId) {
+            @PathVariable(value = "myTelusId") String myTelusId) {
         return userProfileService.findUserProfilesByMyTelusId(myTelusId);
     }
 
@@ -97,7 +115,7 @@ public class UserProfileController {
     )
     @PostMapping("/primary-user-profiles")
     public PrimaryUserProfileDto createPrimaryUserProfile(
-            @RequestBody CreatePrimaryUserProfileRequest createPrimaryUserProfileRequest) {
+            @Valid @RequestBody CreatePrimaryUserProfileRequest createPrimaryUserProfileRequest) {
         return userProfileService.createPrimaryUserProfile(createPrimaryUserProfileRequest);
     }
 
@@ -109,7 +127,7 @@ public class UserProfileController {
     )
     @PutMapping("/primary-user-profiles/{primaryUserProfileId}/home-address")
     public void updateHomeAddress(
-            @RequestBody() PropertyDto homeAddressDto,
+            @Valid @RequestBody() PropertyDto homeAddressDto,
             @Parameter(in = ParameterIn.PATH, description = "id of the primary user profile")
             @PathVariable(value = "primaryUserProfileId") String primaryUserProfileId
     ) {
@@ -123,7 +141,7 @@ public class UserProfileController {
     )
     @PostMapping("/primary-user-profiles/{primaryUserProfileId}/sub-user-profiles")
     public SubUserProfileDto createSubUserProfile(
-            @RequestBody() CreateSubUserProfileRequest createSubUserProfileRequest,
+            @Valid @RequestBody() CreateSubUserProfileRequest createSubUserProfileRequest,
             @Parameter(in = ParameterIn.PATH, description = "id of the primary user profile")
             @PathVariable(value = "primaryUserProfileId") String primaryUserProfileId
     ) {
@@ -139,7 +157,7 @@ public class UserProfileController {
     public UserProfileLinkDto createUserProfileLink(
             @Parameter(in = ParameterIn.PATH, description = "id of the linked user profile")
             @PathVariable(value = "userProfileId") String linkedUserProfileId,
-            @RequestBody() String primaryUserProfileId) {
+            @Valid @RequestBody() String primaryUserProfileId) {
         return userProfileService.createUserProfileLink(primaryUserProfileId, linkedUserProfileId);
     }
 
@@ -173,7 +191,7 @@ public class UserProfileController {
     )
     @PutMapping("/sub-user-profiles/{subUserProfileId}")
     public void bindMyTelusId(
-            @RequestBody() BindMyTelusIdRequest bindMyTelusIdRequest,
+            @Valid @RequestBody() BindMyTelusIdRequest bindMyTelusIdRequest,
             @Parameter(in = ParameterIn.PATH, description = "id of the sub user profile")
             @PathVariable(value = "subUserProfileId") String subUserProfileId
     ) {
@@ -188,7 +206,7 @@ public class UserProfileController {
     )
     @PutMapping("/{userProfileId}")
     public void updateUserProfile(
-            @RequestBody() UpdateUserProfileRequest updateUserProfileRequest,
+            @Valid @RequestBody() UpdateUserProfileRequest updateUserProfileRequest,
             @Parameter(in = ParameterIn.PATH, description = "can be id of a primary as well as sub user profile")
             @PathVariable(value = "userProfileId") String userProfileId) {
         userProfileService.updateUserProfile(userProfileId, updateUserProfileRequest);

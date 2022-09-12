@@ -8,13 +8,10 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 @Accessors(fluent = true)
-public class CreateVerticalRoleRequest {
+public class CreateUserVerticalEnablementRequest {
     @JsonProperty(value = "roleCode", required = true)
     private String roleCode;
 
-    @JsonProperty(value = "roleName", required = true)
-    private String roleName;
-
-    @JsonProperty(value = "description")
-    private String description;
+    @JsonProperty(value = "userName", required = true)
+    private String userName;
 }

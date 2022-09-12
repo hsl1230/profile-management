@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.telus.core.errorhandling.exception.PlatformException;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,8 +20,13 @@ import lombok.experimental.Accessors;
 @JsonInclude(Include.NON_EMPTY)
 @Schema(description = "The standard Error result returned by the REST error when a problem as occurred.")
 public class ErrorResultResource {
+	@JsonProperty()
 	private String id;
+
+	@JsonProperty()
 	private ErrorResource error;
+
+	@JsonProperty()
 	private List<Link> links;
 
 	public static ErrorResultResource from(PlatformException platformException) {

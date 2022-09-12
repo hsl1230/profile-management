@@ -1,20 +1,23 @@
 package com.telus.dl.profilemanagement.rest.controller;
 
-import com.telus.dl.profilemanagement.document.VerticalRole;
 import com.telus.dl.profilemanagement.dto.VerticalDto;
 import com.telus.dl.profilemanagement.service.VerticalService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/profile-management/verticals")
+@Validated
 public class VerticalController {
     private final VerticalService verticalService;
 
@@ -36,7 +39,7 @@ public class VerticalController {
             summary = "create a vertical"
     )
     @PostMapping
-    public VerticalDto createVertical(VerticalDto verticalDto) {
+    public VerticalDto createVertical(@Valid @RequestBody VerticalDto verticalDto) {
         return verticalService.createVertical(verticalDto);
     }
 

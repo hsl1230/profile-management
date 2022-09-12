@@ -5,6 +5,7 @@ import static com.telus.core.errorhandling.resource.HttpErrorHeaders.X_APPLICATI
 import static com.telus.core.errorhandling.resource.HttpErrorHeaders.X_APPLICATION_ERROR_DESCRIPTION;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.telus.core.errorhandling.exception.PlatformException;
@@ -20,19 +21,20 @@ public final class ResponseEntityBuilder {
 	private HttpHeaders headers;
 
 	public ResponseEntity<ErrorResultResource> build() {
-		HttpHeaders responseHeaders = new HttpHeaders();
-    responseHeaders.set(X_APPLICATION_ERROR_CODE, platformException.errorCode().getCode());
-    responseHeaders.set(X_APPLICATION_ERROR_MESSAGE, platformException.errorCode().getMessage());
-    responseHeaders.set(X_APPLICATION_ERROR_DESCRIPTION, platformException.errorCode().getDescription());
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+        responseHeaders.set(X_APPLICATION_ERROR_CODE, platformException.errorCode().getCode());
+        responseHeaders.set(X_APPLICATION_ERROR_MESSAGE, platformException.errorCode().getMessage());
+        responseHeaders.set(X_APPLICATION_ERROR_DESCRIPTION, platformException.errorCode().getDescription());
 
-    if (headers != null && !headers.isEmpty()) {
-      responseHeaders.addAll(headers);
+        if (headers != null && !headers.isEmpty()) {
+            responseHeaders.addAll(headers);
+        }
+
+        ErrorResultResource errorResult = ErrorResultResource.from(platformException);
+
+        return new ResponseEntity<>(errorResult, responseHeaders, platformException.httpStatus());
+
     }
-
-    ErrorResultResource errorResult = ErrorResultResource.from(platformException);
-
-    return new ResponseEntity<>(errorResult, responseHeaders, platformException.httpStatus());
-
-	}
 	
 }

@@ -4,6 +4,7 @@ import com.telus.dl.profilemanagement.dto.permission.PermissionDto;
 import com.telus.dl.profilemanagement.dto.permission.VerticalRolePermissionDto;
 import com.telus.dl.profilemanagement.service.VerticalRolePermissionService;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/profile-management/verticals/{verticalId}/roles/{roleCode}/permissions")
+@Validated
 public class VerticalRolePermissionController {
     private final VerticalRolePermissionService verticalRolePermissionService;
 

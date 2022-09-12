@@ -3,6 +3,7 @@ package com.telus.core.errorhandling.resource;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.validation.FieldError;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -25,14 +26,23 @@ import lombok.experimental.Accessors;
 @JsonInclude(Include.NON_EMPTY)
 @Schema(description = "The standard error response container when there are issue with a REST API request.")
 public class ErrorResource {
+	@JsonProperty()
 	@Schema(description = "The link to the resource producing the error")
 	private List<Link> links;
+
+	@JsonProperty()
 	@Schema(description = "The error code")
 	private String code;
+
+	@JsonProperty()
 	@Schema(description = "The error message")
 	private String message;
+
+	@JsonProperty()
 	@Schema(description = "The error details")
 	private List<String> details;
+
+	@JsonProperty()
 	@Schema(description = "The details of the validation errors")
 	private List<FieldErrorResource> fieldErrors;
 

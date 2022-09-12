@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 import lombok.Getter;
@@ -19,8 +20,11 @@ import lombok.experimental.Accessors;
 @JsonInclude(Include.NON_EMPTY)
 @Schema(description = "Field error resource")
 public class FieldErrorResource {
+	@JsonProperty()
 	@Schema(description = "The subject field")
 	private String field;
+
+	@JsonProperty()
 	@Schema(description = "The validation error")
 	private String error;
 }

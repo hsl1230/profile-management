@@ -7,6 +7,10 @@ import com.telus.core.errorhandling.exception.InternalErrorException;
 import com.telus.core.errorhandling.exception.PlatformException;
 import com.telus.core.errorhandling.resource.ErrorResultResource;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@ErrorHandler
 public class DefaultExceptionHandler extends ExceptionHandler {
 
 	@Override
@@ -30,9 +34,10 @@ public class DefaultExceptionHandler extends ExceptionHandler {
 	}
 
 	@Override
-	public Class<? extends Throwable> exceptionClass() {
-		return Exception.class;
+	public List<Class<? extends Throwable>> exceptionClasses() {
+		List<Class<? extends Throwable>> classes = new ArrayList<>();
+		classes.add(Exception.class);
+		classes.add(PlatformException.class);
+		return classes;
 	}
-
-	
 }

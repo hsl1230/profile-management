@@ -23,7 +23,7 @@ public class BusinessConfig {
 
         ServiceLoader<PropertyMap> loader = ServiceLoader.load(PropertyMap.class);
         for (PropertyMap mapClass : loader) {
-            modelMapper.addMappings(mapClass.getClass().getConstructor().newInstance());
+            modelMapper.addMappings(mapClass);
         }
         return modelMapper;
     }

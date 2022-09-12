@@ -2,6 +2,7 @@ package com.telus.dl.profilemanagement.service;
 
 import com.telus.dl.profilemanagement.document.UserVerticalEnablement;
 import com.telus.dl.profilemanagement.document.UserVerticalId;
+import com.telus.dl.profilemanagement.dto.CreateUserVerticalEnablementRequest;
 import com.telus.dl.profilemanagement.dto.UserVerticalEnablementDto;
 import com.telus.dl.profilemanagement.repository.UserVerticalEnablementRepository;
 import org.modelmapper.ModelMapper;
@@ -22,9 +23,12 @@ public class UserVerticalEnablementService {
     }
 
     public UserVerticalEnablementDto createUserVerticalEnablement(
-            UserVerticalEnablementDto userVerticalEnablementDto) {
+            String verticalId,
+            String userProfileId,
+            CreateUserVerticalEnablementRequest createUserVerticalEnablementRequest) {
         UserVerticalEnablement userVerticalEnablement =
-                modelMapper.map(userVerticalEnablementDto, UserVerticalEnablement.class);
+                modelMapper.map(createUserVerticalEnablementRequest, UserVerticalEnablement.class);
+        userVerticalEnablement.setId(new UserVerticalId(verticalId, userProfileId));
         userVerticalEnablement = userVerticalEnablementRepository.save(userVerticalEnablement);
         return modelMapper.map(userVerticalEnablement, UserVerticalEnablementDto.class);
     }

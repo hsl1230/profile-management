@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import com.telus.core.errorhandling.resource.ErrorResultResource;
 
 public class ExceptionProcessor {
-	private final Map<Class<Throwable>, ExceptionHandler> exceptionHandlers;
+	private final Map<Class<? extends Throwable>, ExceptionHandler> exceptionHandlers;
 
-	public ExceptionProcessor(Map<Class<Throwable>, ExceptionHandler> exceptionHandlers) {
+	public ExceptionProcessor(Map<Class<? extends Throwable>, ExceptionHandler> exceptionHandlers) {
 		this.exceptionHandlers = exceptionHandlers;
 	}
 
