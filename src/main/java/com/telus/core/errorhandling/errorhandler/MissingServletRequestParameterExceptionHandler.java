@@ -14,11 +14,6 @@ public class MissingServletRequestParameterExceptionHandler
 		extends AbstractExceptionHandler<MissingServletRequestParameterException> {
 
 	@Override
-	public Class<? extends Throwable> exceptionClass() {
-		return MissingServletRequestParameterException.class;
-	}
-
-	@Override
 	protected ErrorCode errorCode(MissingServletRequestParameterException exception) {
 		return PlatformErrorCode.INVALID_FIELD;
 	}

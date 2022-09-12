@@ -15,53 +15,49 @@ import com.telus.core.errorhandling.exception.PlatformException;
 import com.telus.core.errorhandling.resource.ErrorResultResource;
 
 public abstract class AbstractExceptionHandler<T extends Exception> extends ExceptionHandler {
-	@Override
-	public Class<? extends Throwable> exceptionClass() {
-		Type genericSuperclass = getClass().getGenericSuperclass();
+    @Override
+    public Class<? extends Throwable> exceptionClass() {
+        Type genericSuperclass = getClass().getGenericSuperclass();
 
-		final Type t = ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
-		try {
-			return (Class<? extends Throwable>) Class.forName(t.getTypeName());
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException();
-		}
-	}
+        final Type t = ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
+        return (Class<? extends Throwable>) t;
+    }
 
-	@Override
-	public ResponseEntity<ErrorResultResource> handleException(Exception exception) {
-		T ex = (T) exception;
-		return processException(ex);
-	}
+    @Override
+    public ResponseEntity<ErrorResultResource> handleException(Exception exception) {
+        T ex = (T) exception;
+        return processException(ex);
+    }
 
-	protected abstract ErrorCode errorCode(T exception);
+    protected abstract ErrorCode errorCode(T exception);
 
-	protected abstract HttpStatus httpStatus(T exception);
+    protected abstract HttpStatus httpStatus(T exception);
 
-	protected List<FieldError> fieldErrors(T exception) {
-		return Collections.emptyList();
-	}
+    protected List<FieldError> fieldErrors(T exception) {
+        return Collections.emptyList();
+    }
 
-	protected HttpHeaders httpHeaders(T exception) {
-		return HttpHeaders.EMPTY;
-	}
+    protected HttpHeaders httpHeaders(T exception) {
+        return HttpHeaders.EMPTY;
+    }
 
-	protected ResponseEntity<ErrorResultResource> processException(T exception) {
-		logger.error("Caught Exception", exception);
+    protected ResponseEntity<ErrorResultResource> processException(T exception) {
+        logger.error("Caught Exception", exception);
 
-		PlatformException platformException = new PlatformException(
-				httpStatus(exception),
-				errorCode(exception),
-				fieldErrors(exception),
-				exception);
+        PlatformException platformException = new PlatformException(
+                httpStatus(exception),
+                errorCode(exception),
+                fieldErrors(exception),
+                exception);
 
-		processPlatformException(platformException, exception);
+        processPlatformException(platformException, exception);
 
-		return new ResponseEntityBuilder()
-				.platformException(platformException)
-				.headers(httpHeaders(exception))
-				.build();
-	}
+        return new ResponseEntityBuilder()
+                .platformException(platformException)
+                .headers(httpHeaders(exception))
+                .build();
+    }
 
-	protected void processPlatformException(PlatformException platformException, T exception) {
-	}
+    protected void processPlatformException(PlatformException platformException, T exception) {
+    }
 }

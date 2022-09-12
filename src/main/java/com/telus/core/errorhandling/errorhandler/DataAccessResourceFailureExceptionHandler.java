@@ -10,11 +10,6 @@ public class DataAccessResourceFailureExceptionHandler
 		extends AbstractExceptionHandler<DataAccessResourceFailureException> {
 
 	@Override
-	public Class<? extends Throwable> exceptionClass() {
-		return DataAccessResourceFailureException.class;
-	}
-
-	@Override
 	protected ErrorCode errorCode(DataAccessResourceFailureException exception) {
 		return PlatformErrorCode.DATABASE_ERROR;
 	}

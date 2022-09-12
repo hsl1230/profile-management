@@ -10,11 +10,6 @@ import com.telus.core.errorhandling.PlatformErrorCode;
 public class MissingRequestHeaderExceptionHandler extends AbstractExceptionHandler<MissingRequestHeaderException> {
 
 	@Override
-	public Class<? extends Throwable> exceptionClass() {
-		return MissingRequestHeaderException.class;
-	}
-
-	@Override
 	protected ErrorCode errorCode(MissingRequestHeaderException exception) {
 		return PlatformErrorCode.INVALID_REQUEST_HEADER;
 	}

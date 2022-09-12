@@ -11,11 +11,6 @@ public class HttpMediaTypeNotSupportedExceptionHandler
 		extends AbstractExceptionHandler<HttpMediaTypeNotSupportedException> {
 
 	@Override
-	public Class<? extends Throwable> exceptionClass() {
-		return HttpMediaTypeNotSupportedException.class;
-	}
-
-	@Override
 	protected ErrorCode errorCode(HttpMediaTypeNotSupportedException exception) {
 		return PlatformErrorCode.UNSUPPORTED_CONTENT_TYPE;
 	}

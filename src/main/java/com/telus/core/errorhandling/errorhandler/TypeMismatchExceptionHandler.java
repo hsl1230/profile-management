@@ -11,11 +11,6 @@ import com.telus.core.errorhandling.exception.PlatformException;
 public class TypeMismatchExceptionHandler extends AbstractExceptionHandler<TypeMismatchException> {
 
 	@Override
-	public Class<? extends Throwable> exceptionClass() {
-		return TypeMismatchException.class;
-	}
-
-	@Override
 	protected ErrorCode errorCode(TypeMismatchException ex) {
 		if (ex.getMostSpecificCause() instanceof IllegalArgumentException) {
 			return PlatformErrorCode.ITEM_NOT_FOUND;

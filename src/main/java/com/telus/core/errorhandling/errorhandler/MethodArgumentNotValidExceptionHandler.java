@@ -12,11 +12,6 @@ import com.telus.core.errorhandling.PlatformErrorCode;
 public class MethodArgumentNotValidExceptionHandler extends AbstractExceptionHandler<MethodArgumentNotValidException> {
 
 	@Override
-	public Class<? extends Throwable> exceptionClass() {
-		return MethodArgumentNotValidException.class;
-	}
-
-	@Override
 	protected ErrorCode errorCode(MethodArgumentNotValidException exception) {
 		return PlatformErrorCode.INVALID_FIELD;
 	}

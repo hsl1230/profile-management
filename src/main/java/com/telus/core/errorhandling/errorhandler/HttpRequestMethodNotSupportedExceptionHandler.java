@@ -11,11 +11,6 @@ public class HttpRequestMethodNotSupportedExceptionHandler
 		extends AbstractExceptionHandler<HttpRequestMethodNotSupportedException> {
 
 	@Override
-	public Class<? extends Throwable> exceptionClass() {
-		return HttpRequestMethodNotSupportedException.class;
-	}
-
-	@Override
 	protected ErrorCode errorCode(HttpRequestMethodNotSupportedException exception) {
 		return PlatformErrorCode.NOT_SUPPORTED;
 	}
