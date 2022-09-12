@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import com.telus.core.errorhandling.ErrorCode;
 import com.telus.core.errorhandling.PlatformErrorCode;
 
+@ErrorHandler
 public class MethodArgumentNotValidExceptionHandler extends AbstractExceptionHandler<MethodArgumentNotValidException> {
 
 	@Override

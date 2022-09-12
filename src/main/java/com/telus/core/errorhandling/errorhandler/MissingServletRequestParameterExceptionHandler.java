@@ -10,6 +10,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import com.telus.core.errorhandling.ErrorCode;
 import com.telus.core.errorhandling.PlatformErrorCode;
 
+@ErrorHandler
 public class MissingServletRequestParameterExceptionHandler
 		extends AbstractExceptionHandler<MissingServletRequestParameterException> {
 
