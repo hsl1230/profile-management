@@ -48,6 +48,7 @@ public class SwaggerConfig {
                 .addTagsItem(new Tag().name("Vertical Role"))
                 .addTagsItem(new Tag().name("Vertical Role Permissions"))
                 .addTagsItem(new Tag().name("User Vertical Permissions"))
+                .addTagsItem(new Tag().name("User Vertical Enablement"))
                 .info(apiInfo());
     }
 

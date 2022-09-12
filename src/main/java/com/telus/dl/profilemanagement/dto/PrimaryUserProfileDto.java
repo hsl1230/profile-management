@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotNull;
+
 @Setter
 @Getter
 @ToString
@@ -14,5 +16,6 @@ import lombok.experimental.Accessors;
 public class PrimaryUserProfileDto extends AbstractUserProfileDto {
     @JsonProperty(value = "property", required = true)
     @Accessors(fluent = true)
+    @NotNull
     private PropertyDto property;
 }

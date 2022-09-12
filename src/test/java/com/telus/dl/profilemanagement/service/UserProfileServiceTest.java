@@ -2,6 +2,7 @@ package com.telus.dl.profilemanagement.service;
 
 import com.telus.dl.profilemanagement.config.BusinessConfig;
 import com.telus.dl.profilemanagement.document.PrimaryUserProfile;
+import com.telus.dl.profilemanagement.dto.AddressDto;
 import com.telus.dl.profilemanagement.dto.CreatePrimaryUserProfileRequest;
 import com.telus.dl.profilemanagement.dto.PropertyDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,11 +51,14 @@ public class UserProfileServiceTest {
 				.myTelusId("T982127")
 				.property(new PropertyDto()
 						.name("home1")
-						.street("191 mt reliant")
-						.city("calgary")
-						.province("alberta")
-						.country("canada")
-						.postCode("T2Z 2G2")
+						.address(
+								new AddressDto()
+										.street("191 mt reliant")
+										.city("calgary")
+										.province("alberta")
+										.country("canada")
+										.postCode("T2Z 2G2")
+						)
 						.description("primary home")
 				);
 

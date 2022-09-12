@@ -5,14 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @Setter
 @Accessors(fluent = true)
 public class CreateVerticalRoleRequest {
     @JsonProperty(value = "roleCode", required = true)
+    @NotBlank
     private String roleCode;
 
     @JsonProperty(value = "roleName", required = true)
+    @NotBlank
     private String roleName;
 
     @JsonProperty(value = "description")

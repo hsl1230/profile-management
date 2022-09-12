@@ -5,30 +5,20 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @Accessors(fluent = true)
 public class PropertyDto {
     @JsonProperty(value = "name", required = true)
-    @Accessors(fluent = true)
+    @NotBlank
     private String name;
 
-    private String unit;
-
-    @JsonProperty(value = "street", required = true)
-    private String street;
-
-    @JsonProperty(value = "city", required = true)
-    private String city;
-
-    @JsonProperty(value = "province", required = true)
-    private String province;
-
-    @JsonProperty(value = "country", required = true)
-    private String country;
-
-    @JsonProperty(value = "postCode", required = true)
-    private String postCode;
+    @JsonProperty(value = "address", required = true)
+    @NotNull
+    private AddressDto address;
 
     @JsonProperty(value = "description", required = false)
     private String description;

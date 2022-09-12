@@ -7,15 +7,20 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @Accessors(fluent = true)
 public class UserProfileLinkDto {
     @JsonProperty(value = "id", required = true)
+    @NotBlank
     private String id;
 
     @JsonProperty(value = "userProfileType", required = true)
     @Setter(AccessLevel.PROTECTED)
+    @NotBlank
     private UserProfileType userProfileType;
 
     @JsonProperty(value = "primaryUserProfile")
@@ -25,6 +30,7 @@ public class UserProfileLinkDto {
     private String linkedUserProfileId;
 
     @JsonProperty(value = "status", required = true)
+    @NotNull
     private ProfileStatus status;
 
 }
