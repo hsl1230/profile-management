@@ -8,7 +8,7 @@ public enum PlatformErrorCode implements ErrorCode {
 			"You submitted an an invalid or unsupported method with your request."),
 	ITEM_NOT_FOUND("5016", "Item not found", "The item provided cannot be found."),
 	ITEM_DISABLED("5017", "Item disabled", "The item provided is disabled."),
-	REQUEST_NOT_PARSEABLE("5023", "Request body not parsable", "The request is not parseable."),
+	REQUEST_NOT_PARSABLE("5023", "Request body not parsable", "The request is not parseable."),
 	INVALID_FIELD("5068", "Field error(s)", "Either you submitted a request that is "
 			+ "missing a mandatory field or the value of a field does not match the format expected."),
 	INVALID_REQUEST_HEADER("5070", "Invalid request header", "Either you submitted a request that is "

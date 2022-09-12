@@ -54,6 +54,9 @@ public class PlatformException extends RuntimeException {
 		this.details = new ArrayList<>();
 		if (this.errorCode.getDescription() != null) {
 			this.details.add(this.errorCode.getDescription());
+			if (cause != null) {
+				this.details.add(cause.getMessage());
+			}
 		}
 	}
 

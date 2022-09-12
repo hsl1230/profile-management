@@ -2,30 +2,25 @@ package com.telus.core.errorhandling.errorhandler;
 
 import com.telus.core.errorhandling.ErrorCode;
 import com.telus.core.errorhandling.PlatformErrorCode;
-import com.telus.core.errorhandling.exception.PlatformException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpStatus;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @ErrorHandler
-public class DataAccessResourceFailureExceptionHandler extends AbstractExceptionHandler {
+public class DataAccessResourceFailureExceptionHandler
+		extends AbstractExceptionHandler<DataAccessResourceFailureException> {
 
 	@Override
-	public List<Class<? extends Throwable>> exceptionClasses() {
-		List<Class<? extends Throwable>> classes = new ArrayList<>();
-		classes.add(DataAccessResourceFailureException.class);
-		return classes;
+	public Class<? extends Throwable> exceptionClass() {
+		return DataAccessResourceFailureException.class;
 	}
 
 	@Override
-	protected ErrorCode errorCode() {
+	protected ErrorCode errorCode(DataAccessResourceFailureException exception) {
 		return PlatformErrorCode.DATABASE_ERROR;
 	}
 
 	@Override
-	protected HttpStatus httpStatus() {
+	protected HttpStatus httpStatus(DataAccessResourceFailureException exception) {
 		return HttpStatus.INTERNAL_SERVER_ERROR;
 	}
 }

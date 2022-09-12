@@ -47,7 +47,7 @@ public class DefaultExceptionHandlingFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 		} catch (RuntimeException ex) {
 			if (ex.getCause() instanceof JsonParseException) {
-				BadRequestException bre = new BadRequestException(PlatformErrorCode.REQUEST_NOT_PARSEABLE, ex);
+				BadRequestException bre = new BadRequestException(PlatformErrorCode.REQUEST_NOT_PARSABLE, ex);
 				handleException(bre, response);
 			} else {
 				handleException(ex, response);
