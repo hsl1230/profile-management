@@ -27,7 +27,8 @@ services:
     command: [ "--bind_ip", "0.0.0.0" ]
 
   mongo:
-    image: mongo
+    # from 5.0+, we need to change mongo to mongosh in create-user.sh
+    image: mongo:4.4.6
     container_name: mongo
     hostname: mongo
     restart: always
