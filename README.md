@@ -7,6 +7,14 @@ The project was developed on Ubuntu 22.04 LTS
 
 Tested on docker compose version v2.6.1 on Ubuntu 22.04 LTS
 
+Install docker compose on Ubuntu:
+
+```
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+sudo apt-get install docker-compose-plugin
+```
+
+Network driver: https://docs.docker.com/network/
 ## Highlights
 
 - Springfox is used to provide a swagger-ui
