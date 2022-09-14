@@ -27,9 +27,11 @@ public class CreatePrimaryUserProfileRequest {
 
     @JsonProperty(value = "phoneNumber", required = true)
     @NotBlank
+    @Pattern(regexp = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$")
     private String phoneNumber;
 
     @JsonProperty(value = "email", required = true)
+    @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     private String email;
 

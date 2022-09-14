@@ -13,13 +13,11 @@ Install docker compose on Ubuntu:
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 sudo apt-get install docker-compose-plugin
 ```
-
-Network driver: https://docs.docker.com/network/
 ## Highlights
 
-- Springfox is used to provide a swagger-ui
+- Springdoc-openapi-ui is used to provide a swagger-ui
 - All endpoints created can be tested through the swagger-ui
-- File upload is supported in the swagger-ui
+- Added Error Handling framework
 - Unit tests are added and passed
 - Api test is set up as a gradle task, ready to add more tests
 - MongoRepository is used to access mongo db
@@ -28,7 +26,7 @@ Network driver: https://docs.docker.com/network/
 ## What to do next?
 
 - Add more unit tests to cover the code
-- A framework to handle exceptions, logs, securities
+- A framework to handle logs, securities
 - Add user authentication and authorization service to do login, access token generation, refreshing and validation.
 - Add privilege service to manage and check the permissions
 - Add security(authentication and authorization) through access token to the micro services
@@ -102,3 +100,8 @@ sudo gpasswd -a $USER docker
 ```bash
 newgrp docker
 ```
+
+## References
+
+### [Docker Network driver](https://docs.docker.com/network/)
+

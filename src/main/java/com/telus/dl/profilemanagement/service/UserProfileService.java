@@ -23,7 +23,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,25 +40,15 @@ public class UserProfileService {
 
     public List<AbstractUserProfileDto> findUserProfilesByMyTelusId(String myTelusId) {
         List<UserProfile> list = mongoTemplate.find(new Query().addCriteria(Criteria
-                        .where("myTelusId")
-                        .is(myTelusId)), UserProfile.class);
-        List<AbstractUserProfileDto> result = new ArrayList<>();
-        list.forEach(userProfile -> {
-            if (userProfile instanceof PrimaryUserProfile) {
-                result.add(modelMapper.map(userProfile, PrimaryUserProfileDto.class));
-            } else {
-                SubUserProfileDto subUserProfileDto = modelMapper.map(userProfile, SubUserProfileDto.class);
-
-                subUserProfileDto.primaryUserProfile(
-                        findPrimaryUserProfileById(
-                                ((SubUserProfile)userProfile).getPrimaryUserProfileId()
-                        )
-                );
-                result.add(subUserProfileDto);
-            }
-        });
-
-        return result;
+                .where("myTelusId")
+                .is(myTelusId)), UserProfile.class);
+        return list.stream().map(userProfile -> userProfile instanceof PrimaryUserProfile ?
+                        modelMapper.map(userProfile, PrimaryUserProfileDto.class) :
+                        modelMapper.map(userProfile, SubUserProfileDto.class)
+                                .primaryUserProfile(
+                                        findPrimaryUserProfileById(((SubUserProfile) userProfile).getPrimaryUserProfileId())
+                                ))
+                .toList();
     }
 
     private PrimaryUserProfileDto findPrimaryUserProfileById(String id) {
@@ -118,7 +107,7 @@ public class UserProfileService {
         subUserProfile = mongoTemplate.insert(subUserProfile);
 
         return modelMapper.map(subUserProfile, SubUserProfileDto.class)
-                .primaryUserProfile((PrimaryUserProfileDto)new PrimaryUserProfileDto().id(primaryUserProfileId));
+                .primaryUserProfile(findPrimaryUserProfileById(primaryUserProfileId));
     }
 
     public UserProfileLinkDto createUserProfileLink(String primaryUserProfileId, String linkedUserProfileId) {
@@ -129,7 +118,8 @@ public class UserProfileService {
 
         userProfileLink = mongoTemplate.insert(userProfileLink);
 
-        return modelMapper.map(userProfileLink, UserProfileLinkDto.class);
+        return modelMapper.map(userProfileLink, UserProfileLinkDto.class)
+                .primaryUserProfile(findPrimaryUserProfileById(primaryUserProfileId));
     }
 
     public List<UserProfileLinkDto> findLinkedUserProfiles(String linkedUserProfileId) {
