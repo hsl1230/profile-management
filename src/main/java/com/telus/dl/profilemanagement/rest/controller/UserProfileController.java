@@ -163,8 +163,8 @@ public class UserProfileController {
 
     @Operation(
             tags = {"User Profile", "User Profile Link"},
-            summary = "get a list of sub user profiles owned the specified primary user profile",
-            description = "a list of sub user profiles."
+            summary = "get a list of user profile links linked from the user profile id",
+            description = "a list of user profile links."
     )
     @GetMapping("/{userProfileId}/user-profile-links")
     public List<UserProfileLinkDto> findUserProfileLinks(
