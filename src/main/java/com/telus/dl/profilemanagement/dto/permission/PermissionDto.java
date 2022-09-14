@@ -8,6 +8,8 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class PermissionDto {
+    private String featureId;
+
     @NotNull(message = "resource is needed")
     private Resource resource;
 

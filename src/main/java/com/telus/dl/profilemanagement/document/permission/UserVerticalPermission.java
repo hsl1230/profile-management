@@ -20,6 +20,8 @@ public class UserVerticalPermission {
     @NotNull(message = "userProfileVerticalId is needed")
     private UserVerticalId userVerticalId;
 
+    private String featureId;
+
     @NotNull(message = "resource is needed")
     private Resource resource;
 
