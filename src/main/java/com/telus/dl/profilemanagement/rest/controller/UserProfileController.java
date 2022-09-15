@@ -1,14 +1,13 @@
 package com.telus.dl.profilemanagement.rest.controller;
 
-import com.telus.dl.profilemanagement.dto.AbstractUserProfileDto;
-import com.telus.dl.profilemanagement.dto.BindMyTelusIdRequest;
-import com.telus.dl.profilemanagement.dto.CreatePrimaryUserProfileRequest;
-import com.telus.dl.profilemanagement.dto.CreateSubUserProfileRequest;
-import com.telus.dl.profilemanagement.dto.PrimaryUserProfileDto;
-import com.telus.dl.profilemanagement.dto.PropertyDto;
-import com.telus.dl.profilemanagement.dto.SubUserProfileDto;
-import com.telus.dl.profilemanagement.dto.UpdateUserProfileRequest;
-import com.telus.dl.profilemanagement.dto.UserProfileLinkDto;
+import com.telus.dl.profilemanagement.dto.userprofile.AbstractUserProfileDto;
+import com.telus.dl.profilemanagement.dto.userprofile.CreatePrimaryUserProfileRequest;
+import com.telus.dl.profilemanagement.dto.userprofile.CreateSubUserProfileRequest;
+import com.telus.dl.profilemanagement.dto.userprofile.PrimaryUserProfileDto;
+import com.telus.dl.profilemanagement.dto.userprofile.PropertyDto;
+import com.telus.dl.profilemanagement.dto.userprofile.SubUserProfileDto;
+import com.telus.dl.profilemanagement.dto.userprofile.UpdateUserProfileRequest;
+import com.telus.dl.profilemanagement.dto.userprofile.UserProfileLinkDto;
 import com.telus.dl.profilemanagement.service.UserProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -26,6 +25,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -62,10 +62,10 @@ public class UserProfileController {
                     )
             }
     )
-    @GetMapping("/{myTelusId}")
+    @GetMapping()
     public List<AbstractUserProfileDto> getUserProfilesByMyTelusId(
-            @Parameter(in = ParameterIn.PATH, description = "NyTelusUser Id")
-            @PathVariable(value = "myTelusId") String myTelusId) {
+            @Parameter(name = "myTelusId", in = ParameterIn.QUERY, description = "NyTelusUser Id", required = true)
+            @RequestParam(value = "myTelusId", required = true) String myTelusId) {
         return userProfileService.findUserProfilesByMyTelusId(myTelusId);
     }
 
@@ -189,13 +189,13 @@ public class UserProfileController {
             summary = "bind a myTelusId with the sub user profile",
             description = "it can be called when an invitee accepts an invitation."
     )
-    @PutMapping("/sub-user-profiles/{subUserProfileId}")
+    @PutMapping("/sub-user-profiles/{subUserProfileId}/bindMyTelusId")
     public void bindMyTelusId(
-            @Valid @RequestBody() BindMyTelusIdRequest bindMyTelusIdRequest,
+            @Valid @RequestBody() String myTelusId,
             @Parameter(in = ParameterIn.PATH, description = "id of the sub user profile")
             @PathVariable(value = "subUserProfileId") String subUserProfileId
     ) {
-        userProfileService.bindMyTelusId(subUserProfileId, bindMyTelusIdRequest.myTelusId());
+        userProfileService.bindMyTelusId(subUserProfileId, myTelusId);
     }
 
     @Operation(

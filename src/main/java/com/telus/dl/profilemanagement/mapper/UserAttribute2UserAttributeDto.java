@@ -1,16 +1,17 @@
 package com.telus.dl.profilemanagement.mapper;
 
 import com.telus.core.modelmapping.PropertyMapper;
-import com.telus.dl.profilemanagement.document.permission.VerticalRolePermission;
-import com.telus.dl.profilemanagement.dto.permission.VerticalRolePermissionDto;
+import com.telus.dl.profilemanagement.document.attribute.UserAttribute;
+import com.telus.dl.profilemanagement.dto.attribute.UserAttributeDto;
 import org.modelmapper.PropertyMap;
 
 @PropertyMapper
-public class VerticalRolePermission2VerticalRolePermissionDto
-        extends PropertyMap<VerticalRolePermission, VerticalRolePermissionDto> {
+public class UserAttribute2UserAttributeDto
+        extends PropertyMap<UserAttribute, UserAttributeDto> {
     @Override
     protected void configure() {
-        map().setVerticalId(source.verticalRoleId().getVerticalId());
-        map().setRoleCode(source.verticalRoleId().getRoleCode());
+        map().setUserProfileId(source.id().getUserProfileId());
+        map().getAttribute().setName(source.id().getName());
+        map().getAttribute().setValue(source.value());
     }
 }

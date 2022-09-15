@@ -1,4 +1,4 @@
-package com.telus.dl.profilemanagement.dto;
+package com.telus.dl.profilemanagement.dto.userprofile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.EqualsAndHashCode;

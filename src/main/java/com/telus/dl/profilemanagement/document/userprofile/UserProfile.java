@@ -1,6 +1,6 @@
-package com.telus.dl.profilemanagement.document;
+package com.telus.dl.profilemanagement.document.userprofile;
 
-import com.telus.dl.profilemanagement.dto.ProfileStatus;
+import com.telus.dl.profilemanagement.dto.userprofile.ProfileStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;

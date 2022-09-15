@@ -1,5 +1,7 @@
-package com.telus.core;
+package com.telus.dl.profilemanagement.service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
 import java.io.ByteArrayInputStream;
@@ -20,45 +22,51 @@ import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-public class ObjectCrypter {
+@Service
+public class CryptService {
+    private final String keyString;
+    private final String ivString;
 
-    private Cipher deCipher;
-    private Cipher enCipher;
-    private SecretKeySpec key;
-    private IvParameterSpec ivSpec;
+    public CryptService(@Value("crypt.key") String keyString, @Value("crypt.iv") String ivString) {
+        this.keyString = keyString;
+        this.ivString = ivString;
+    }
 
-    public ObjectCrypter(String keyString,   String ivString) {
-        // wrap key data in Key/IV specs to pass to cipher
-        ivSpec = new IvParameterSpec(ivString.getBytes());
-        // create the cipher with the algorithm you choose
-        // see javadoc for Cipher class for more info, e.g.
+    public String encrypt(Object obj){
         try {
+            // wrap key data in Key/IV specs to pass to cipher
+            IvParameterSpec ivSpec = new IvParameterSpec(ivString.getBytes());
+            // create the cipher with the algorithm you choose
+            // see javadoc for Cipher class for more info, e.g.
+
             DESKeySpec dkey = new  DESKeySpec(keyString.getBytes());
-            key = new SecretKeySpec(dkey.getKey(), "DES");
-            deCipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
-            enCipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
-        } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            SecretKeySpec key = new SecretKeySpec(dkey.getKey(), "DES");
+            Cipher enCipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
+
+            byte[] input = convertToByteArray(obj);
+            enCipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
+            return Base64Utils.encodeToString(enCipher.doFinal(input));
+        } catch (Exception ex) {
+            throw new RuntimeException("Error occurred when do encrypt", ex);
         }
     }
-    public String encrypt(Object obj) throws InvalidKeyException, InvalidAlgorithmParameterException, IOException, IllegalBlockSizeException, ShortBufferException, BadPaddingException {
-        byte[] input = convertToByteArray(obj);
-        enCipher.init(Cipher.ENCRYPT_MODE, key, ivSpec);
 
-        return Base64Utils.encodeToString(enCipher.doFinal(input));
-    }
+    public Object decrypt(Object encrypted) {
+        try {
+            // wrap key data in Key/IV specs to pass to cipher
+            IvParameterSpec ivSpec = new IvParameterSpec(ivString.getBytes());
+            // create the cipher with the algorithm you choose
+            // see javadoc for Cipher class for more info, e.g.
 
-    public Object decrypt(String  encrypted) throws InvalidKeyException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException, IOException, ClassNotFoundException {
-        deCipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
+            DESKeySpec dkey = new  DESKeySpec(keyString.getBytes());
+            SecretKeySpec key = new SecretKeySpec(dkey.getKey(), "DES");
+            Cipher deCipher = Cipher.getInstance("DES/CBC/PKCS5Padding");
 
-        return convertFromByteArray(deCipher.doFinal(Base64Utils.decodeFromString(encrypted)));
+            deCipher.init(Cipher.DECRYPT_MODE, key, ivSpec);
+            return convertFromByteArray(deCipher.doFinal(Base64Utils.decodeFromString((String)encrypted)));
+        } catch (Exception ex) {
+            throw new RuntimeException("Error occurred when do encrypt", ex);
+        }
     }
 
     private Object convertFromByteArray(byte[] byteObject) throws IOException,

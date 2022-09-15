@@ -1,9 +1,9 @@
 package com.telus.dl.profilemanagement.service;
 
-import com.telus.dl.profilemanagement.document.PrimaryUserProfile;
-import com.telus.dl.profilemanagement.dto.AddressDto;
-import com.telus.dl.profilemanagement.dto.CreatePrimaryUserProfileRequest;
-import com.telus.dl.profilemanagement.dto.PropertyDto;
+import com.telus.dl.profilemanagement.document.userprofile.PrimaryUserProfile;
+import com.telus.dl.profilemanagement.dto.userprofile.AddressDto;
+import com.telus.dl.profilemanagement.dto.userprofile.CreatePrimaryUserProfileRequest;
+import com.telus.dl.profilemanagement.dto.userprofile.PropertyDto;
 import com.telus.dl.profilemanagement.util.MockModelMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

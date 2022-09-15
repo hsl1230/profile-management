@@ -1,7 +1,7 @@
-package com.telus.dl.profilemanagement.dto;
+package com.telus.dl.profilemanagement.dto.userprofile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.telus.dl.profilemanagement.document.UserProfileType;
+import com.telus.dl.profilemanagement.document.userprofile.UserProfileType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
