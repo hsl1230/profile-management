@@ -28,7 +28,7 @@ public class UserAttributeController {
     }
 
     @Operation(
-            tags = {"User Attribute"},
+            tags = {"User Normal Attribute"},
             summary = "create a normal user attribute"
     )
     @PostMapping("/normal-attributes")
@@ -39,7 +39,7 @@ public class UserAttributeController {
     }
 
     @Operation(
-            tags = {"User Attribute"},
+            tags = {"User Normal Attribute"},
             summary = "get a normal user attribute by name"
     )
     @GetMapping("/normal-attributes/{name}")
@@ -50,7 +50,7 @@ public class UserAttributeController {
     }
 
     @Operation(
-            tags = {"User Attribute"},
+            tags = {"User Normal Attribute"},
             summary = "get normal user attributes of a user profile"
     )
     @GetMapping("/normal-attributes")
@@ -60,7 +60,7 @@ public class UserAttributeController {
     }
 
     @Operation(
-            tags = {"User Attribute"},
+            tags = {"User Private Attribute"},
             summary = "create a private user attribute"
     )
     @PostMapping("/private-attributes")
@@ -71,7 +71,7 @@ public class UserAttributeController {
     }
 
     @Operation(
-            tags = {"User Attribute"},
+            tags = {"User Private Attribute"},
             summary = "get a private user attribute by name"
     )
     @GetMapping("/private-attributes/{name}")
@@ -82,7 +82,7 @@ public class UserAttributeController {
     }
 
     @Operation(
-            tags = {"User Attribute"},
+            tags = {"User Private Attribute"},
             summary = "get private user attributes of a user profile"
     )
     @GetMapping("/private-attributes")
@@ -92,7 +92,7 @@ public class UserAttributeController {
     }
 
     @Operation(
-            tags = {"User Attribute"},
+            tags = {"User Private Attribute"},
             summary = "verify a private user attribute"
     )
     @PutMapping("/private-attributes/{name}/verify")
