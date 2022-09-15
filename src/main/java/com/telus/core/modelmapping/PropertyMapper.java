@@ -1,4 +1,4 @@
-package com.telus.core.errorhandling.errorhandler;
+package com.telus.core.modelmapping;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Component
-public @interface ErrorHandler {
+public @interface PropertyMapper {
     @AliasFor(annotation = Component.class)
     String value() default "";
 }

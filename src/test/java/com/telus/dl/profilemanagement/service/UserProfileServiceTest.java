@@ -26,7 +26,7 @@ public class UserProfileServiceTest {
 	@Mock
 	private MongoTemplate mongoTemplate;
 	@Spy
-	private ModelMapper modelMapper = new BusinessConfig().modelMapper();
+	private ModelMapper modelMapper = new ModelMapper();
 
 	@InjectMocks
 	private UserProfileService userProfileService;
