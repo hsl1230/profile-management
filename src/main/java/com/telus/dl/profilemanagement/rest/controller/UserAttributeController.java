@@ -32,10 +32,10 @@ public class UserAttributeController {
             summary = "create a normal user attribute"
     )
     @PostMapping("/normal-attributes")
-    public UserAttributeDto createUserAttribute(
+    public UserAttributeDto createNormalUserAttribute(
             @PathVariable("userProfileId") String userProfileId,
             @Valid @RequestBody AttributeDto attributeDto) {
-        return userAttributeService.createUserAttribute(userProfileId, attributeDto);
+        return userAttributeService.createNormalUserAttribute(userProfileId, attributeDto);
     }
 
     @Operation(
@@ -43,7 +43,7 @@ public class UserAttributeController {
             summary = "get a normal user attribute by name"
     )
     @GetMapping("/normal-attributes/{name}")
-    public UserAttributeDto findUserAttribute(
+    public UserAttributeDto findNormalUserAttribute(
             @PathVariable("userProfileId") String userProfileId,
             @PathVariable("name") String name) {
         return userAttributeService.findNormalUserAttributeById(userProfileId, name);
@@ -54,7 +54,7 @@ public class UserAttributeController {
             summary = "get normal user attributes of a user profile"
     )
     @GetMapping("/normal-attributes")
-    public List<UserAttributeDto> findUserAttributes(
+    public List<UserAttributeDto> findNormalUserAttributes(
             @PathVariable("userProfileId") String userProfileId) {
         return userAttributeService.findNormalUserAttributesByUserProfile(userProfileId);
     }
@@ -105,19 +105,30 @@ public class UserAttributeController {
 
     @Operation(
             tags = {"User Attribute"},
+            summary = "get a user attribute by name"
+    )
+    @GetMapping("/{name}")
+    public UserAttributeDto findUserAttribute(
+            @PathVariable("userProfileId") String userProfileId,
+            @PathVariable("name") String name) {
+        return userAttributeService.findUserAttributeById(userProfileId, name);
+    }
+
+    @Operation(
+            tags = {"User Attribute"},
             summary = "get all user attributes of a user profile"
     )
-    @GetMapping("/attributes")
+    @GetMapping("")
     public List<UserAttributeDto> findAllUserAttributes(
             @PathVariable("userProfileId") String userProfileId) {
-        return userAttributeService.findPrivateUserAttributesByUserProfile(userProfileId);
+        return userAttributeService.findAllAttributesByUserProfile(userProfileId);
     }
 
     @Operation(
             tags = {"User Attribute"},
             summary = "delete a user attribute"
     )
-    @DeleteMapping("/attributes/{name}")
+    @DeleteMapping("/{name}")
     public void deleteUserAttribute(
             @PathVariable("userProfileId") String userProfileId,
             @PathVariable("name") String name

@@ -30,7 +30,7 @@ public class UserAttributeService {
         this.modelMapper = modelMapper;
     }
 
-    public UserAttributeDto createUserAttribute(
+    public UserAttributeDto createNormalUserAttribute(
             String userProfileId,
             AttributeDto attributeDto) {
         userProfileService.assertUserProfileExists(userProfileId);
@@ -75,6 +75,14 @@ public class UserAttributeService {
 
     public UserAttributeDto findNormalUserAttributeById(String userProfileId, String name) {
         return modelMapper.map(findPureUserAttributeById(userProfileId, name, false), UserAttributeDto.class);
+    }
+
+    public UserAttributeDto findUserAttributeById(String userProfileId, String name) {
+        return userAttributeRepository
+                .findById(UserAttributeId.builder().userProfileId(userProfileId).name(name).build())
+                .map(userAttribute -> modelMapper.map(userAttribute, UserAttributeDto.class))
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No user attribute found for userProfileId=" + userProfileId + ", name=" + name));
     }
 
     public UserAttributeDto findPrivateUserAttributeById(String userProfileId, String name) {
