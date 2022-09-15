@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Accessors(fluent = true)
-public abstract class NonLinkUserProfile extends UserProfile {
+public class NonLinkUserProfile extends UserProfile {
 
     @NotNull
     private String firstName;

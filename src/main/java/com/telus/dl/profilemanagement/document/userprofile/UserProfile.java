@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @Accessors(fluent = true)
-public abstract class UserProfile {
+public class UserProfile {
     @Id
     private String id;
 
