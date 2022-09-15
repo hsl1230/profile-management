@@ -4,6 +4,7 @@ import com.telus.dl.profilemanagement.dto.ProfileStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,23 +13,10 @@ import javax.validation.constraints.NotNull;
 @Document(collection = "user_profile")
 @Getter
 @Setter
+@Accessors(fluent = true)
 public abstract class UserProfile {
     @Id
     private String id;
-
-    @NotNull
-    private String firstName;
-
-    private String middleName;
-
-    @NotNull
-    private String lastName;
-
-    @NotNull
-    private String phoneNumber;
-
-    @NotNull
-    private String email;
 
     @NotNull
     @Setter(AccessLevel.PROTECTED)
@@ -36,6 +24,4 @@ public abstract class UserProfile {
 
     @NotNull
     private ProfileStatus status;
-
-    private String myTelusId;
 }

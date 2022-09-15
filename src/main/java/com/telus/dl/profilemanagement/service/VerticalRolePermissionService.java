@@ -1,6 +1,5 @@
 package com.telus.dl.profilemanagement.service;
 
-import com.telus.dl.profilemanagement.document.UserVerticalId;
 import com.telus.dl.profilemanagement.document.VerticalRoleId;
 import com.telus.dl.profilemanagement.document.permission.VerticalRolePermission;
 import com.telus.dl.profilemanagement.dto.permission.PermissionDto;
@@ -15,13 +14,16 @@ import java.util.List;
 @Service
 public class VerticalRolePermissionService {
     private final VerticalRolePermissionRepository verticalRolePermissionRepository;
+    private final VerticalRoleService verticalRoleService;
     private final ModelMapper modelMapper;
 
     @Autowired
     public VerticalRolePermissionService(
             VerticalRolePermissionRepository verticalRolePermissionRepository,
+            VerticalRoleService verticalRoleService,
             ModelMapper modelMapper) {
         this.verticalRolePermissionRepository = verticalRolePermissionRepository;
+        this.verticalRoleService = verticalRoleService;
         this.modelMapper = modelMapper;
     }
 
@@ -29,6 +31,8 @@ public class VerticalRolePermissionService {
             String verticalId,
             String roleCode,
             List<PermissionDto> permissionDtos) {
+        verticalRoleService.assertVerticalRoleExists(verticalId, roleCode);
+
         List<VerticalRolePermission> VerticalRolePermissions = permissionDtos
                 .stream()
                 .map(permissionDto -> modelMapper.map(permissionDto, VerticalRolePermission.class)

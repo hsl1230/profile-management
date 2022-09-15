@@ -170,7 +170,7 @@ public class UserProfileController {
     public List<UserProfileLinkDto> findUserProfileLinks(
             @Parameter(in = ParameterIn.PATH, description = "id of the linked user profile")
             @PathVariable(value = "userProfileId") String linkedUserProfileId) {
-        return userProfileService.findLinkedUserProfiles(linkedUserProfileId);
+        return userProfileService.findUserProfileLinks(linkedUserProfileId);
     }
 
     @Operation(

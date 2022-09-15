@@ -1,5 +1,6 @@
 package com.telus.dl.profilemanagement.service;
 
+import com.telus.core.errorhandling.exception.EntityNotFoundException;
 import com.telus.dl.profilemanagement.document.Vertical;
 import com.telus.dl.profilemanagement.dto.VerticalDto;
 import com.telus.dl.profilemanagement.repository.VerticalRepository;
@@ -34,7 +35,11 @@ public class VerticalService {
         return verticalRepository
                 .findById(verticalId)
                 .map(vertical -> modelMapper.map(vertical, VerticalDto.class))
-                .orElse(null);
+                .orElseThrow(() -> new EntityNotFoundException("No vertical found for verticalId=" + verticalId));
+    }
+
+    public void assertVerticalExists(String verticalId) {
+        findVerticalById(verticalId);
     }
 
     public List<VerticalDto> findAllVerticals() {

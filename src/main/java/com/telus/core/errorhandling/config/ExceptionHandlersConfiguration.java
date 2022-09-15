@@ -24,23 +24,6 @@ public class ExceptionHandlersConfiguration {
 		return handlers;
 	}
 
-//	private List<ExceptionHandler> findErrorHandlers(String scanPackage) throws ClassNotFoundException,
-//			NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
-//		ClassPathScanningCandidateComponentProvider provider = createComponentScanner();
-//		ArrayList<ExceptionHandler> errorHandlers = new ArrayList<>();
-//		for (BeanDefinition beanDef : provider.findCandidateComponents(scanPackage)) {
-//			Class<ExceptionHandler> clazz = (Class<ExceptionHandler>) Class.forName(beanDef.getBeanClassName());
-//			errorHandlers.add(clazz.getConstructor().newInstance());
-//		}
-//		return errorHandlers;
-//	}
-//
-//	private ClassPathScanningCandidateComponentProvider createComponentScanner() {
-//		ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-//		provider.addIncludeFilter(new AnnotationTypeFilter(ErrorHandler.class));
-//		return provider;
-//	}
-//
 	@Bean
 	public ExceptionProcessor exceptionProcessor(
 			@Qualifier("exceptionHandlers") Map<Class<? extends Throwable>, ExceptionHandler> exceptionHandlers) {

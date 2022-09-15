@@ -2,14 +2,16 @@ package com.telus.dl.profilemanagement.document;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class PrimaryUserProfile extends UserProfile {
+@Accessors(fluent = true)
+public class PrimaryUserProfile extends NonLinkUserProfile {
     public PrimaryUserProfile() {
-        this.setUserProfileType(UserProfileType.PRIMARY);
+        this.userProfileType(UserProfileType.PRIMARY);
     }
 
     @Getter

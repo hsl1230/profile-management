@@ -14,13 +14,16 @@ import java.util.List;
 @Service
 public class UserVerticalPermissionService {
     private final UserVerticalPermissionRepository userVerticalPermissionRepository;
+    private final UserVerticalEnablementService userVerticalEnablementService;
     private final ModelMapper modelMapper;
 
     @Autowired
     public UserVerticalPermissionService(
             UserVerticalPermissionRepository userVerticalPermissionRepository,
+            UserVerticalEnablementService userVerticalEnablementService,
             ModelMapper modelMapper) {
         this.userVerticalPermissionRepository = userVerticalPermissionRepository;
+        this.userVerticalEnablementService = userVerticalEnablementService;
         this.modelMapper = modelMapper;
     }
 
@@ -28,6 +31,8 @@ public class UserVerticalPermissionService {
             String verticalId,
             String userProfileId,
             List<PermissionDto> permissionDtos) {
+        userVerticalEnablementService.assertUserVerticalEnablementExists(verticalId, userProfileId);
+
         List<UserVerticalPermission> userVerticalPermissions = permissionDtos
                 .stream()
                 .map(permissionDto -> modelMapper.map(permissionDto, UserVerticalPermission.class)

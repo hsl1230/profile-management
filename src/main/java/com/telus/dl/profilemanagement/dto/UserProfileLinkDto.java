@@ -26,8 +26,8 @@ public class UserProfileLinkDto {
     @JsonProperty(value = "primaryUserProfile")
     private PrimaryUserProfileDto primaryUserProfile;
 
-    @JsonProperty(value = "linkedUserProfileId")
-    private String linkedUserProfileId;
+    @JsonProperty(value = "linkedUserProfile")
+    private AbstractUserProfileDto linkedUserProfile;
 
     @JsonProperty(value = "status", required = true)
     @NotNull

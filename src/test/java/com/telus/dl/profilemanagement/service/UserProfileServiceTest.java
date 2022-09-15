@@ -1,10 +1,10 @@
 package com.telus.dl.profilemanagement.service;
 
-import com.telus.dl.profilemanagement.config.BusinessConfig;
 import com.telus.dl.profilemanagement.document.PrimaryUserProfile;
 import com.telus.dl.profilemanagement.dto.AddressDto;
 import com.telus.dl.profilemanagement.dto.CreatePrimaryUserProfileRequest;
 import com.telus.dl.profilemanagement.dto.PropertyDto;
+import com.telus.dl.profilemanagement.util.MockModelMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,13 +26,10 @@ public class UserProfileServiceTest {
 	@Mock
 	private MongoTemplate mongoTemplate;
 	@Spy
-	private ModelMapper modelMapper = new ModelMapper();
+	private ModelMapper modelMapper = new MockModelMapper();
 
 	@InjectMocks
 	private UserProfileService userProfileService;
-
-	public UserProfileServiceTest() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-	}
 
 	@BeforeEach
 	public void setUp() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
