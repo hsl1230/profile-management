@@ -37,7 +37,8 @@ public class UserVerticalEnablementController {
 
     @Operation(
             tags = {"User Vertical Enablement"},
-            summary = "get the user vertical enablement"
+            summary = "Assign a vertical role to a user profile",
+            description = "user profile can be any type(Primary, Sub or Link)."
     )
     @PutMapping
     public UserVerticalEnablementDto createUserVerticalEnablement(
@@ -49,7 +50,7 @@ public class UserVerticalEnablementController {
 
     @Operation(
             tags = {"User Vertical Enablement"},
-            summary = "delete the user vertical enablement"
+            summary = "revoke a vertical role from a user."
     )
     @DeleteMapping
     public void deleteUserVerticalEnablement(

@@ -30,9 +30,9 @@ public class UserVerticalPermissionController {
 
     @Operation(
             tags = {"User Vertical Permissions"},
-            summary = "grant permissions to the sub user profile",
+            summary = "grant permissions to the user profile",
             description = """
-                    permissions can be granted to the user directly.
+                    permissions can be granted to the users(including sub user profile / user profile link) directly.
                          \s
                           Declare <Who>
                             sub user profile
@@ -68,7 +68,7 @@ public class UserVerticalPermissionController {
 
     @Operation(
             tags = {"User Vertical Permissions"},
-            summary = "get a list of permissions granted to the sub user profile on the specified vertical"
+            summary = "get a list of permissions granted to the user profile on the specified vertical"
     )
     @GetMapping()
     public List<UserVerticalPermissionDto> findUserVerticalPermissions(

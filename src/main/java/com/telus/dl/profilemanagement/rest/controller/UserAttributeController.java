@@ -51,7 +51,7 @@ public class UserAttributeController {
 
     @Operation(
             tags = {"User Public Attribute"},
-            summary = "get VerticalRolePermissions of a user profile"
+            summary = "get all public user attributes of a user profile"
     )
     @GetMapping("/public-attributes")
     public List<UserAttributeDto> findPublicUserAttributes(
@@ -85,7 +85,7 @@ public class UserAttributeController {
 
     @Operation(
             tags = {"User Private Attribute"},
-            summary = "get private user attributes of a user profile",
+            summary = "get all private user attributes of a user profile",
             description = "private attributes are decrypted when fetched from the db"
     )
     @GetMapping("/private-attributes")

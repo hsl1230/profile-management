@@ -27,7 +27,7 @@ public class VerticalRolePermissionController {
 
     @Operation(
             tags = {"Vertical Role Permissions"},
-            summary = "grant permissions to the role",
+            summary = "grant permissions to a vertical role",
             description = """
                     permissions can be granted to the user directly.
                          \s
@@ -88,7 +88,7 @@ public class VerticalRolePermissionController {
 
     @Operation(
             tags = {"Vertical Role Permissions"},
-            summary = "delete all user vertical role permissions"
+            summary = "delete all permissions of the vertical role "
     )
     @DeleteMapping("/all")
     public void deleteAllVerticalRolePermissions(

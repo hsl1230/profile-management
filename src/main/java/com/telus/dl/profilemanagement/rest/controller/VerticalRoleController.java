@@ -28,7 +28,7 @@ public class VerticalRoleController {
 
     @Operation(
             tags = {"Vertical Role"},
-            summary = "get a list of roles related to the vertical"
+            summary = "get a list of vertical roles"
     )
     @GetMapping
     public List<VerticalRoleDto> findVerticalRoles(
