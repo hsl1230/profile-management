@@ -62,7 +62,7 @@ public class UserAttributeController {
     @Operation(
             tags = {"User Private Attribute"},
             summary = "create a private user attribute",
-            description = "private attributes are encrypted before save in the db."
+            description = "private attributes are encrypted when saved in the db."
     )
     @PostMapping("/private-attributes")
     public void createPrivateUserAttribute(
@@ -74,7 +74,7 @@ public class UserAttributeController {
     @Operation(
             tags = {"User Private Attribute"},
             summary = "get a private user attribute by name",
-            description = "private attribute is decrypted after fetched from the db"
+            description = "private attribute is decrypted when fetched from the db"
     )
     @GetMapping("/private-attributes/{name}")
     public UserAttributeDto findPrivateUserAttribute(
@@ -86,7 +86,7 @@ public class UserAttributeController {
     @Operation(
             tags = {"User Private Attribute"},
             summary = "get private user attributes of a user profile",
-            description = "private attributes are decrypted after fetched from the db"
+            description = "private attributes are decrypted when fetched from the db"
     )
     @GetMapping("/private-attributes")
     public List<UserAttributeDto> findPrivateUserAttributes(
@@ -96,7 +96,8 @@ public class UserAttributeController {
 
     @Operation(
             tags = {"User Private Attribute"},
-            summary = "verify a private user attribute"
+            summary = "verify a private user attribute",
+            description = "The value to be compared will be encrypted before compared with the encrypted value in the database."
     )
     @PutMapping("/private-attributes/{name}/verify")
     public void verifyPrivateUserAttribute(
@@ -109,7 +110,7 @@ public class UserAttributeController {
     @Operation(
             tags = {"User Attribute"},
             summary = "get a user attribute by name",
-            description = "include public and private attribute, private attribute will not be decrypted after fetched from the db"
+            description = "include public and private attribute, private attribute will not be decrypted when fetched from the db"
     )
     @GetMapping("/{name}")
     public UserAttributeDto findUserAttribute(
@@ -121,7 +122,7 @@ public class UserAttributeController {
     @Operation(
             tags = {"User Attribute"},
             summary = "get all user attributes of a user profile",
-            description = "include public and private attributes, private attributes will not be decrypted after fetched from the db"
+            description = "include public and private attributes, private attributes will not be decrypted when fetched from the db"
     )
     @GetMapping("")
     public List<UserAttributeDto> findAllUserAttributes(
@@ -131,7 +132,8 @@ public class UserAttributeController {
 
     @Operation(
             tags = {"User Attribute"},
-            summary = "delete a user attribute"
+            summary = "delete a user attribute",
+            description = "include private and public user attributes"
     )
     @DeleteMapping("/{name}")
     public void deleteUserAttribute(
