@@ -44,7 +44,7 @@ public class SwaggerConfig {
                 .addTagsItem(new Tag().name("Sub User Profile"))
                 .addTagsItem(new Tag().name("User Profile Link"))
                 .addTagsItem(new Tag().name("User Profile"))
-                .addTagsItem(new Tag().name("User Normal Attribute"))
+                .addTagsItem(new Tag().name("User Public Attribute"))
                 .addTagsItem(new Tag().name("User Private Attribute"))
                 .addTagsItem(new Tag().name("User Attribute"))
                 .addTagsItem(new Tag().name("Vertical"))

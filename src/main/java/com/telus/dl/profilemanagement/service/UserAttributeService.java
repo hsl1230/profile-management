@@ -30,7 +30,7 @@ public class UserAttributeService {
         this.modelMapper = modelMapper;
     }
 
-    public UserAttributeDto createNormalUserAttribute(
+    public UserAttributeDto createPublicUserAttribute(
             String userProfileId,
             AttributeDto attributeDto) {
         userProfileService.assertUserProfileExists(userProfileId);
@@ -73,7 +73,7 @@ public class UserAttributeService {
                         "No user attribute found for userProfileId=" + userProfileId + ", name=" + name + ", isPrivate=" + isPrivate));
     }
 
-    public UserAttributeDto findNormalUserAttributeById(String userProfileId, String name) {
+    public UserAttributeDto findPublicUserAttributeById(String userProfileId, String name) {
         return modelMapper.map(findPureUserAttributeById(userProfileId, name, false), UserAttributeDto.class);
     }
 
@@ -91,7 +91,7 @@ public class UserAttributeService {
         return modelMapper.map(userAttribute, UserAttributeDto.class);
     }
 
-    public List<UserAttributeDto> findNormalUserAttributesByUserProfile(String userProfileId) {
+    public List<UserAttributeDto> findPublicUserAttributesByUserProfile(String userProfileId) {
         return userAttributeRepository
                 .findByIdUserProfileIdAndIsPrivate(userProfileId, false)
                 .stream()

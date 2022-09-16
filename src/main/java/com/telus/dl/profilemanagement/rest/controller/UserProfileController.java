@@ -89,10 +89,10 @@ public class UserProfileController {
                     )
             }
     )
-    @GetMapping("/{myTelusId}/primary-user-profiles")
+    @GetMapping("/primary-user-profiles")
     public List<PrimaryUserProfileDto> getPrimaryUserProfilesByMyTelusId(
-            @Parameter(in = ParameterIn.PATH, description = "NyTelusUser Id")
-            @PathVariable("myTelusId") String myTelusId) {
+            @Parameter(name = "myTelusId", in = ParameterIn.QUERY, description = "MyTelusUser Id", required = true)
+            @RequestParam(value = "myTelusId", required = true) String myTelusId) {
         return userProfileService.findPrimaryUserProfilesByMyTelusId(myTelusId);
     }
 

@@ -28,40 +28,41 @@ public class UserAttributeController {
     }
 
     @Operation(
-            tags = {"User Normal Attribute"},
-            summary = "create a normal user attribute"
+            tags = {"User Public Attribute"},
+            summary = "create a public user attribute"
     )
-    @PostMapping("/normal-attributes")
-    public UserAttributeDto createNormalUserAttribute(
+    @PostMapping("/public-attributes")
+    public UserAttributeDto createPublicUserAttribute(
             @PathVariable("userProfileId") String userProfileId,
             @Valid @RequestBody AttributeDto attributeDto) {
-        return userAttributeService.createNormalUserAttribute(userProfileId, attributeDto);
+        return userAttributeService.createPublicUserAttribute(userProfileId, attributeDto);
     }
 
     @Operation(
-            tags = {"User Normal Attribute"},
-            summary = "get a normal user attribute by name"
+            tags = {"User Public Attribute"},
+            summary = "get a public user attribute by name"
     )
-    @GetMapping("/normal-attributes/{name}")
-    public UserAttributeDto findNormalUserAttribute(
+    @GetMapping("/public-attributes/{name}")
+    public UserAttributeDto findPublicUserAttribute(
             @PathVariable("userProfileId") String userProfileId,
             @PathVariable("name") String name) {
-        return userAttributeService.findNormalUserAttributeById(userProfileId, name);
+        return userAttributeService.findPublicUserAttributeById(userProfileId, name);
     }
 
     @Operation(
-            tags = {"User Normal Attribute"},
-            summary = "get normal user attributes of a user profile"
+            tags = {"User Public Attribute"},
+            summary = "get VerticalRolePermissions of a user profile"
     )
-    @GetMapping("/normal-attributes")
-    public List<UserAttributeDto> findNormalUserAttributes(
+    @GetMapping("/public-attributes")
+    public List<UserAttributeDto> findPublicUserAttributes(
             @PathVariable("userProfileId") String userProfileId) {
-        return userAttributeService.findNormalUserAttributesByUserProfile(userProfileId);
+        return userAttributeService.findPublicUserAttributesByUserProfile(userProfileId);
     }
 
     @Operation(
             tags = {"User Private Attribute"},
-            summary = "create a private user attribute"
+            summary = "create a private user attribute",
+            description = "private attributes are encrypted before save in the db."
     )
     @PostMapping("/private-attributes")
     public void createPrivateUserAttribute(
@@ -72,7 +73,8 @@ public class UserAttributeController {
 
     @Operation(
             tags = {"User Private Attribute"},
-            summary = "get a private user attribute by name"
+            summary = "get a private user attribute by name",
+            description = "private attribute is decrypted after fetched from the db"
     )
     @GetMapping("/private-attributes/{name}")
     public UserAttributeDto findPrivateUserAttribute(
@@ -83,7 +85,8 @@ public class UserAttributeController {
 
     @Operation(
             tags = {"User Private Attribute"},
-            summary = "get private user attributes of a user profile"
+            summary = "get private user attributes of a user profile",
+            description = "private attributes are decrypted after fetched from the db"
     )
     @GetMapping("/private-attributes")
     public List<UserAttributeDto> findPrivateUserAttributes(
@@ -105,7 +108,8 @@ public class UserAttributeController {
 
     @Operation(
             tags = {"User Attribute"},
-            summary = "get a user attribute by name"
+            summary = "get a user attribute by name",
+            description = "include public and private attribute, private attribute will not be decrypted after fetched from the db"
     )
     @GetMapping("/{name}")
     public UserAttributeDto findUserAttribute(
@@ -116,7 +120,8 @@ public class UserAttributeController {
 
     @Operation(
             tags = {"User Attribute"},
-            summary = "get all user attributes of a user profile"
+            summary = "get all user attributes of a user profile",
+            description = "include public and private attributes, private attributes will not be decrypted after fetched from the db"
     )
     @GetMapping("")
     public List<UserAttributeDto> findAllUserAttributes(
