@@ -89,7 +89,7 @@ public class UserProfileService {
         }
     }
 
-    private AbstractUserProfileDto findUserProfileById(String id) {
+    private AbstractUserProfileDto findNonLinkUserProfileById(String id) {
         NonLinkUserProfile nonLinkUserProfile = mongoTemplate.findOne(new Query().addCriteria(Criteria
                 .where("id")
                 .is(id)
@@ -159,7 +159,7 @@ public class UserProfileService {
 
     public UserProfileLinkDto createUserProfileLink(String primaryUserProfileId, String linkedUserProfileId) {
         PrimaryUserProfileDto primaryUserProfileDto = findPrimaryUserProfileById(primaryUserProfileId);
-        AbstractUserProfileDto userProfileDto = findUserProfileById(linkedUserProfileId);
+        AbstractUserProfileDto userProfileDto = findNonLinkUserProfileById(linkedUserProfileId);
 
         UserProfileLink userProfileLink = new UserProfileLink()
                 .primaryUserProfileId(primaryUserProfileId)
@@ -182,7 +182,7 @@ public class UserProfileService {
                 .stream()
                 .map(userProfileLink -> modelMapper.map(userProfileLink, UserProfileLinkDto.class)
                         .primaryUserProfile(findPrimaryUserProfileById(userProfileLink.primaryUserProfileId()))
-                        .linkedUserProfile(findUserProfileById(userProfileLink.linkedUserProfileId())))
+                        .linkedUserProfile(findNonLinkUserProfileById(userProfileLink.linkedUserProfileId())))
                 .toList();
     }
 
@@ -193,7 +193,7 @@ public class UserProfileService {
     }
 
     public void updateUserProfile(String userProfileId, UpdateUserProfileRequest updateUserProfileRequest) {
-        findUserProfileById(userProfileId);
+        findNonLinkUserProfileById(userProfileId);
 
         Update update = new Update();
         if (StringUtils.isNotBlank(updateUserProfileRequest.firstName())) {
