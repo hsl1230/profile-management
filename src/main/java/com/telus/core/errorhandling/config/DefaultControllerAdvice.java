@@ -1,10 +1,10 @@
 package com.telus.core.errorhandling.config;
 
+import com.telus.core.errorhandling.errorhandler.ExceptionProcessor;
+import com.telus.core.errorhandling.resource.ErrorResultResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
-import com.telus.core.errorhandling.errorhandler.ExceptionProcessor;
-import com.telus.core.errorhandling.resource.ErrorResultResource;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**

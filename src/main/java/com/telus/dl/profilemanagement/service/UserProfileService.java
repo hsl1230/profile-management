@@ -1,5 +1,6 @@
 package com.telus.dl.profilemanagement.service;
 
+import com.mongodb.client.result.UpdateResult;
 import com.telus.core.errorhandling.exception.EntityNotFoundException;
 import com.telus.dl.profilemanagement.document.userprofile.UserProfile;
 import com.telus.dl.profilemanagement.document.userprofile.UserProfileLink;
@@ -42,8 +43,8 @@ public class UserProfileService {
 
     public List<AbstractUserProfileDto> findUserProfilesByMyTelusId(String myTelusId) {
         List<NonLinkUserProfile> list = mongoTemplate.find(new Query().addCriteria(Criteria
-                .where("myTelusId")
-                .is(myTelusId)), NonLinkUserProfile.class);
+                .where("myTelusId").is(myTelusId)
+                .and("status").is(ProfileStatus.ACTIVE)), NonLinkUserProfile.class);
         return list.stream().map(nonLinkUserProfile -> nonLinkUserProfile instanceof PrimaryUserProfile ?
                         modelMapper.map(nonLinkUserProfile, PrimaryUserProfileDto.class) :
                         modelMapper.map(nonLinkUserProfile, SubUserProfileDto.class)
@@ -55,10 +56,9 @@ public class UserProfileService {
 
     private PrimaryUserProfileDto findPrimaryUserProfileById(String id) {
         PrimaryUserProfile primaryUserProfile = mongoTemplate.findOne(new Query().addCriteria(Criteria
-                        .where("id")
-                        .is(id)
-                        .and("userProfileType")
-                        .is(UserProfileType.PRIMARY)), PrimaryUserProfile.class);
+                .where("id").is(id)
+                .and("userProfileType").is(UserProfileType.PRIMARY)
+                .and("status").is(ProfileStatus.ACTIVE)), PrimaryUserProfile.class);
         if (primaryUserProfile == null) {
             throw new EntityNotFoundException("No primary user profile found related to the primaryUserProfileId " + id);
         } else {
@@ -77,10 +77,9 @@ public class UserProfileService {
 
     private SubUserProfileDto findSubUserProfileById(String id) {
         SubUserProfile subUserProfile = mongoTemplate.findOne(new Query().addCriteria(Criteria
-                .where("id")
-                .is(id)
-                .and("userProfileType")
-                .is(UserProfileType.SUB)), SubUserProfile.class);
+                .where("id").is(id)
+                .and("userProfileType").is(UserProfileType.SUB)
+                .and("status").is(ProfileStatus.ACTIVE)), SubUserProfile.class);
         if (subUserProfile == null) {
             throw new EntityNotFoundException("No sub user profile found related to the subUserProfileId " + id);
         } else {
@@ -91,10 +90,9 @@ public class UserProfileService {
 
     private AbstractUserProfileDto findNonLinkUserProfileById(String id) {
         NonLinkUserProfile nonLinkUserProfile = mongoTemplate.findOne(new Query().addCriteria(Criteria
-                .where("id")
-                .is(id)
-                .and("userProfileType")
-                .in(UserProfileType.PRIMARY, UserProfileType.SUB)), NonLinkUserProfile.class);
+                .where("id").is(id).and("userProfileType")
+                .in(UserProfileType.PRIMARY, UserProfileType.SUB)
+                .and("status").is(ProfileStatus.ACTIVE)), NonLinkUserProfile.class);
 
         if (nonLinkUserProfile == null) {
             throw new EntityNotFoundException("No primary/sub user profile found related to the userProfileId " + id);
@@ -110,23 +108,33 @@ public class UserProfileService {
 
     public List<PrimaryUserProfileDto> findPrimaryUserProfilesByMyTelusId(String myTelusId) {
         return mongoTemplate.find(new Query().addCriteria(Criteria
-                        .where("myTelusId")
-                        .is(myTelusId)
-                        .and("userProfileType")
-                        .is(UserProfileType.PRIMARY)), PrimaryUserProfile.class)
+                        .where("myTelusId").is(myTelusId)
+                        .and("userProfileType").is(UserProfileType.PRIMARY)
+                        .and("status").is(ProfileStatus.ACTIVE)), PrimaryUserProfile.class)
                 .stream().map(
                         primaryUserProfile -> modelMapper.map(primaryUserProfile, PrimaryUserProfileDto.class))
                 .toList();
     }
 
-    public List<SubUserProfileDto> getSubUserProfilesByPrimaryUserProfileId(String primaryUserProfileId) {
+    public List<SubUserProfileDto> findAllSubUserProfilesByPrimaryUserProfileId(String primaryUserProfileId) {
         PrimaryUserProfileDto primaryUserProfileDto = findPrimaryUserProfileById(primaryUserProfileId);
 
         return mongoTemplate.find(new Query().addCriteria(Criteria
-                        .where("primaryUserProfileId")
-                        .is(primaryUserProfileId)
-                        .and("userProfileType")
-                        .is(UserProfileType.SUB)), SubUserProfile.class)
+                        .where("primaryUserProfileId").is(primaryUserProfileId)
+                        .and("userProfileType").is(UserProfileType.SUB)), SubUserProfile.class)
+                .stream().map(
+                        subUserProfile -> modelMapper.map(subUserProfile, SubUserProfileDto.class)
+                                .primaryUserProfile(primaryUserProfileDto))
+                .toList();
+    }
+
+    public List<SubUserProfileDto> findActiveSubUserProfilesByPrimaryUserProfileId(String primaryUserProfileId) {
+        PrimaryUserProfileDto primaryUserProfileDto = findPrimaryUserProfileById(primaryUserProfileId);
+
+        return mongoTemplate.find(new Query().addCriteria(Criteria
+                        .where("primaryUserProfileId").is(primaryUserProfileId)
+                        .and("userProfileType").is(UserProfileType.SUB)
+                        .and("status").is(ProfileStatus.ACTIVE)), SubUserProfile.class)
                 .stream().map(
                         subUserProfile -> modelMapper.map(subUserProfile, SubUserProfileDto.class)
                                 .primaryUserProfile(primaryUserProfileDto))
@@ -175,10 +183,9 @@ public class UserProfileService {
 
     public List<UserProfileLinkDto> findUserProfileLinks(String linkedUserProfileId) {
         return mongoTemplate.find(new Query().addCriteria(Criteria
-                        .where("linkedUserProfileId")
-                        .is(linkedUserProfileId)
-                        .and("userProfileType")
-                        .is(UserProfileType.LINK)), UserProfileLink.class)
+                        .where("linkedUserProfileId").is(linkedUserProfileId)
+                        .and("userProfileType").is(UserProfileType.LINK)
+                        .and("status").is(ProfileStatus.ACTIVE)), UserProfileLink.class)
                 .stream()
                 .map(userProfileLink -> modelMapper.map(userProfileLink, UserProfileLinkDto.class)
                         .primaryUserProfile(findPrimaryUserProfileById(userProfileLink.primaryUserProfileId()))
@@ -190,6 +197,17 @@ public class UserProfileService {
         mongoTemplate.remove(new Query().addCriteria(Criteria
                 .where("id")
                 .is(userProfileId)), NonLinkUserProfile.class);
+    }
+
+    public void deleteUserProfile(String userProfileId) {
+        Update update = new Update();
+        update.set("status", ProfileStatus.DELETED);
+        UpdateResult result = mongoTemplate.updateFirst(new Query().addCriteria(Criteria
+                .where("id")
+                .is(userProfileId)), update, UserProfile.class);
+        if (result.getModifiedCount() == 0) {
+            throw new EntityNotFoundException("No user profile found related to the userProfileId " + userProfileId);
+        }
     }
 
     public void updateUserProfile(String userProfileId, UpdateUserProfileRequest updateUserProfileRequest) {

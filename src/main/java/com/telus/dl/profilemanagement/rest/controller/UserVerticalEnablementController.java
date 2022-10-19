@@ -5,14 +5,12 @@ import com.telus.dl.profilemanagement.dto.UserVerticalEnablementDto;
 import com.telus.dl.profilemanagement.service.UserVerticalEnablementService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @RestController
 @RequestMapping("/api/profile-management/verticals/{verticalId}/user-profiles/{userProfileId}/enablement")
@@ -38,7 +36,7 @@ public class UserVerticalEnablementController {
     @Operation(
             tags = {"User Vertical Enablement"},
             summary = "Assign a vertical role to a user profile",
-            description = "user profile can be any type(Primary, Sub or Link)."
+            description = "user profile can be any type(Primary, Sub or Link). the user vertical enablement is disabled when created."
     )
     @PutMapping
     public UserVerticalEnablementDto createUserVerticalEnablement(
@@ -50,12 +48,38 @@ public class UserVerticalEnablementController {
 
     @Operation(
             tags = {"User Vertical Enablement"},
-            summary = "revoke a vertical role from a user."
+            summary = "Enable a user vertical enablement",
+            description = "user profile can be any type(Primary, Sub or Link)."
     )
-    @DeleteMapping
-    public void deleteUserVerticalEnablement(
+    @PutMapping("/enable")
+    public void enableUserVerticalEnablement(
             @PathVariable("verticalId") String verticalId,
             @PathVariable("userProfileId") String userProfileId) {
-        userVerticalEnablementService.deleteUserVerticalEnablement(verticalId, userProfileId);
+        userVerticalEnablementService.enableUserVerticalEnablement(verticalId, userProfileId);
     }
+
+    @Operation(
+            tags = {"User Vertical Enablement"},
+            summary = "Disable a user vertical enablement",
+            description = "user profile can be any type(Primary, Sub or Link)."
+    )
+    @PutMapping("/disable")
+    public void disableUserVerticalEnablement(
+            @PathVariable("verticalId") String verticalId,
+            @PathVariable("userProfileId") String userProfileId) {
+        userVerticalEnablementService.disableUserVerticalEnablement(verticalId, userProfileId);
+    }
+
+//    @Deprecated
+//    @Operation(
+//            tags = {"User Vertical Enablement"},
+//            summary = "revoke a vertical role from a user.",
+//            description = "application should never use this endpoint."
+//    )
+//    @DeleteMapping
+//    public void deleteUserVerticalEnablement(
+//            @PathVariable("verticalId") String verticalId,
+//            @PathVariable("userProfileId") String userProfileId) {
+//        userVerticalEnablementService.deleteUserVerticalEnablement(verticalId, userProfileId);
+//    }
 }

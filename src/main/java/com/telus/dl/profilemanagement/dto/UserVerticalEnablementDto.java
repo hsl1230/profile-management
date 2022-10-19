@@ -26,4 +26,7 @@ public class UserVerticalEnablementDto {
     @JsonProperty(value = "roleCode", required = true)
     @NotBlank
     private String roleCode;
+
+    @JsonProperty(value = "isEnabled", required = true)
+    private boolean isEnabled;
 }

@@ -1,11 +1,11 @@
 package com.telus.core.errorhandling.errorhandler;
 
-import org.springframework.http.ResponseEntity;
-
-import com.telus.core.errorhandling.PlatformErrorCode;
 import com.telus.core.errorhandling.exception.InternalErrorException;
 import com.telus.core.errorhandling.exception.PlatformException;
 import com.telus.core.errorhandling.resource.ErrorResultResource;
+import org.springframework.http.ResponseEntity;
+
+import com.telus.core.errorhandling.PlatformErrorCode;
 
 @ErrorHandler
 public class DefaultExceptionHandler extends ExceptionHandler {

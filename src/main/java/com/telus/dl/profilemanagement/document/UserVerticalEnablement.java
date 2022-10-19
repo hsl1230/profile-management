@@ -19,4 +19,6 @@ public class UserVerticalEnablement {
 
     @NotNull
     private String roleCode;
+
+    private boolean isEnabled;
 }

@@ -5,11 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.telus.core.errorhandling.config.ExceptionHandlersConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 
-import com.telus.core.errorhandling.config.ExceptionHandlersConfiguration;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @Target(ElementType.TYPE)

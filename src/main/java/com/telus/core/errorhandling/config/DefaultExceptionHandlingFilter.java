@@ -9,6 +9,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.telus.core.errorhandling.PlatformErrorCode;
+import com.telus.core.errorhandling.errorhandler.ExceptionProcessor;
+import com.telus.core.errorhandling.exception.BadRequestException;
+import com.telus.core.errorhandling.resource.ErrorResultResource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -17,10 +21,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.telus.core.errorhandling.PlatformErrorCode;
-import com.telus.core.errorhandling.errorhandler.ExceptionProcessor;
-import com.telus.core.errorhandling.exception.BadRequestException;
-import com.telus.core.errorhandling.resource.ErrorResultResource;
 
 @Priority(value = Integer.MIN_VALUE)
 @ConditionalOnClass({

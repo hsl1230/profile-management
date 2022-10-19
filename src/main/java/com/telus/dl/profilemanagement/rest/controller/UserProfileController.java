@@ -18,7 +18,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -105,7 +104,7 @@ public class UserProfileController {
     public List<SubUserProfileDto> getSubUserProfilesOfPrimaryUserProfile(
             @Parameter(in = ParameterIn.PATH, description = "primary user profile id")
             @PathVariable("primaryUserProfileId") String primaryUserProfileId) {
-        return userProfileService.getSubUserProfilesByPrimaryUserProfileId(primaryUserProfileId);
+        return userProfileService.findAllSubUserProfilesByPrimaryUserProfileId(primaryUserProfileId);
     }
 
     @Operation(
@@ -175,13 +174,13 @@ public class UserProfileController {
 
     @Operation(
             tags = {"User Profile"},
-            summary = "remove a user profile including primary user profile, sub user profile and user profile link"
+            summary = "Mark a user profile as DELETED including primary user profile, sub user profile and user profile link"
     )
-    @DeleteMapping("/{userProfileId}")
+    @PutMapping("/{userProfileId}/delete")
     public void removeUserProfile(
             @Parameter(in = ParameterIn.PATH, description = "id of user profile")
             @PathVariable(value = "userProfileId") String userProfileId) {
-        userProfileService.removeUserProfile(userProfileId);
+        userProfileService.deleteUserProfile(userProfileId);
     }
 
     @Operation(

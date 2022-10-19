@@ -1,11 +1,11 @@
 package com.telus.core.errorhandling.errorhandler;
 
+import com.telus.core.errorhandling.exception.PlatformException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
 
 import com.telus.core.errorhandling.ErrorCode;
 import com.telus.core.errorhandling.PlatformErrorCode;
-import com.telus.core.errorhandling.exception.PlatformException;
 
 @ErrorHandler
 public class TypeMismatchExceptionHandler extends AbstractExceptionHandler<TypeMismatchException> {

@@ -7,6 +7,9 @@ import com.telus.dl.profilemanagement.dto.permission.VerticalRolePermissionDto;
 import com.telus.dl.profilemanagement.repository.VerticalRolePermissionRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,15 +18,18 @@ import java.util.List;
 public class VerticalRolePermissionService {
     private final VerticalRolePermissionRepository verticalRolePermissionRepository;
     private final VerticalRoleService verticalRoleService;
+    private final MongoTemplate mongoTemplate;
     private final ModelMapper modelMapper;
 
     @Autowired
     public VerticalRolePermissionService(
             VerticalRolePermissionRepository verticalRolePermissionRepository,
             VerticalRoleService verticalRoleService,
+            MongoTemplate mongoTemplate,
             ModelMapper modelMapper) {
         this.verticalRolePermissionRepository = verticalRolePermissionRepository;
         this.verticalRoleService = verticalRoleService;
+        this.mongoTemplate = mongoTemplate;
         this.modelMapper = modelMapper;
     }
 
@@ -43,7 +49,7 @@ public class VerticalRolePermissionService {
                 .toList();
         return verticalRolePermissionRepository.saveAll(VerticalRolePermissions)
                 .stream()
-                .map(VerticalRolePermission -> modelMapper.map(VerticalRolePermission, VerticalRolePermissionDto.class))
+                .map(verticalRolePermission -> modelMapper.map(verticalRolePermission, VerticalRolePermissionDto.class))
                 .toList();
     }
 
@@ -71,7 +77,24 @@ public class VerticalRolePermissionService {
                         roleCode(roleCode)
                         .build())
                 .stream()
-                .map(VerticalRolePermission -> modelMapper.map(VerticalRolePermission, VerticalRolePermissionDto.class))
+                .map(verticalRolePermission -> modelMapper.map(verticalRolePermission, VerticalRolePermissionDto.class))
+                .toList();
+    }
+
+    public List<VerticalRolePermissionDto> findVerticalRolePermissionsForResource(
+            String verticalId,
+            String roleCode,
+            String resourceId,
+            String resourceType) {
+        return mongoTemplate.find(
+                        new Query().addCriteria(
+                                Criteria.where("verticalRoleId.verticalId").is(verticalId)
+                                        .and("verticalRoleId.roleCode").is(roleCode)
+                                        .and("resource.resourceId").is(resourceId)
+                                        .and("resource.resourceType").is(resourceType)),
+                        VerticalRolePermission.class)
+                .stream()
+                .map(verticalRolePermission -> modelMapper.map(verticalRolePermission, VerticalRolePermissionDto.class))
                 .toList();
     }
 }

@@ -1,8 +1,11 @@
 package com.telus.dl.profilemanagement.rest.controller;
 
+import com.telus.dl.profilemanagement.dto.UserVerticalEnablementDto;
 import com.telus.dl.profilemanagement.dto.permission.PermissionDto;
 import com.telus.dl.profilemanagement.dto.permission.UserVerticalPermissionDto;
+import com.telus.dl.profilemanagement.service.UserVerticalEnablementService;
 import com.telus.dl.profilemanagement.service.UserVerticalPermissionService;
+import com.telus.dl.profilemanagement.service.VerticalRolePermissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,10 +26,14 @@ import java.util.List;
 @Validated
 public class UserVerticalPermissionController {
     private final UserVerticalPermissionService userVerticalPermissionService;
+    private final VerticalRolePermissionService verticalRolePermissionService;
+    private final UserVerticalEnablementService userVerticalEnablementService;
 
     @Autowired
-    public UserVerticalPermissionController(UserVerticalPermissionService userVerticalPermissionService) {
+    public UserVerticalPermissionController(UserVerticalPermissionService userVerticalPermissionService, VerticalRolePermissionService verticalRolePermissionService, UserVerticalEnablementService userVerticalEnablementService) {
         this.userVerticalPermissionService = userVerticalPermissionService;
+        this.verticalRolePermissionService = verticalRolePermissionService;
+        this.userVerticalEnablementService = userVerticalEnablementService;
     }
 
     @Operation(
@@ -75,6 +83,29 @@ public class UserVerticalPermissionController {
             @PathVariable("verticalId") String verticalId,
             @PathVariable("userProfileId") String userProfileId) {
         return userVerticalPermissionService.findUserVerticalPermissions(verticalId, userProfileId);
+    }
+
+
+    @Operation(
+            tags = {"User Vertical Permissions"},
+            summary = "get all permissions granted to the user profile(includes those granted on the role) on the specified vertical for the resource"
+    )
+    @GetMapping("/{resourceType}/{resourceId}")
+    public List<PermissionDto> findUserVerticalPermissionsForResource(
+            @PathVariable("verticalId") String verticalId,
+            @PathVariable("userProfileId") String userProfileId,
+            @PathVariable("resourceType") String resourceType,
+            @PathVariable("resourceId") String resourceId) {
+        UserVerticalEnablementDto userVerticalEnablementDto = userVerticalEnablementService
+                .findUserVerticalEnablementById(verticalId, userProfileId);
+
+        ArrayList<PermissionDto> permissions = new ArrayList<>();
+        permissions.addAll(userVerticalPermissionService.findUserVerticalPermissionsForResource(
+                verticalId, userProfileId, resourceId, resourceType));
+
+        permissions.addAll(verticalRolePermissionService.findVerticalRolePermissionsForResource(
+                verticalId, userVerticalEnablementDto.roleCode(), resourceId, resourceType));
+        return permissions;
     }
 
     @Operation(

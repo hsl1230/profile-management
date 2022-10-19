@@ -40,8 +40,27 @@ public class UserVerticalEnablementService {
         UserVerticalEnablement userVerticalEnablement =
                 modelMapper.map(createUserVerticalEnablementRequest, UserVerticalEnablement.class);
         userVerticalEnablement.setId(new UserVerticalId(verticalId, userProfileId));
+        userVerticalEnablement.setEnabled(false);
         userVerticalEnablement = userVerticalEnablementRepository.save(userVerticalEnablement);
         return modelMapper.map(userVerticalEnablement, UserVerticalEnablementDto.class);
+    }
+
+    public void enableUserVerticalEnablement(String verticalId, String userProfileId) {
+        UserVerticalEnablement userVerticalEnablement = userVerticalEnablementRepository
+                .findById(UserVerticalId.builder().verticalId(verticalId).userProfileId(userProfileId).build())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No user vertical enablement found for verticalId=" + verticalId + ", userProfileId=" + userProfileId));
+        userVerticalEnablement.setEnabled(true);
+        userVerticalEnablementRepository.save(userVerticalEnablement);
+    }
+
+    public void disableUserVerticalEnablement(String verticalId, String userProfileId) {
+        UserVerticalEnablement userVerticalEnablement = userVerticalEnablementRepository
+                .findById(UserVerticalId.builder().verticalId(verticalId).userProfileId(userProfileId).build())
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "No user vertical enablement found for verticalId=" + verticalId + ", userProfileId=" + userProfileId));
+        userVerticalEnablement.setEnabled(false);
+        userVerticalEnablementRepository.save(userVerticalEnablement);
     }
 
     public void deleteUserVerticalEnablement(String verticalId, String userProfileId) {
@@ -51,7 +70,7 @@ public class UserVerticalEnablementService {
 
     public UserVerticalEnablementDto findUserVerticalEnablementById(String verticalId, String userProfileId) {
         return userVerticalEnablementRepository
-                .findById(UserVerticalId.builder().verticalId(verticalId).userProfileId(userProfileId).build())
+                .findByIdAndIsEnabled(UserVerticalId.builder().verticalId(verticalId).userProfileId(userProfileId).build(), true)
                 .map(userVerticalEnablement -> modelMapper.map(userVerticalEnablement, UserVerticalEnablementDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No user vertical enablement found for verticalId=" + verticalId + ", userProfileId=" + userProfileId));
