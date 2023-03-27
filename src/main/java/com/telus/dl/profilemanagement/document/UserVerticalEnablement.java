@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Document(collection = "user-vertical-enablement")
 @Getter
@@ -14,10 +14,10 @@ public class UserVerticalEnablement {
     @Id
     private UserVerticalId id;
 
-    @NotNull
+    @NotBlank
     private String userName;
 
-    @NotNull
+    @NotBlank
     private String roleCode;
 
     private boolean isEnabled;

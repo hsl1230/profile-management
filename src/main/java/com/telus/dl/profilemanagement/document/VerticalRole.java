@@ -5,7 +5,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Document(collection = "vertical")
 @Getter
@@ -14,7 +14,7 @@ public class VerticalRole {
     @Id
     private VerticalRoleId id;
 
-    @NotNull
+    @NotBlank
     private String roleName;
 
     private String description;

@@ -19,5 +19,5 @@ public class UserAttribute {
     @NotNull
     private Object value;
 
-    private boolean isPrivate;
+    private boolean isSensitive;
 }

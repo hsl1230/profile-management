@@ -8,17 +8,9 @@ import lombok.experimental.Accessors;
 @Getter
 @Setter
 public class UpdateUserProfileRequest {
-    @JsonProperty(value = "firstName")
+    @JsonProperty(value = "userName")
     @Accessors(fluent = true)
-    private String firstName;
-
-    @JsonProperty(value = "middleName")
-    @Accessors(fluent = true)
-    private String middleName;
-
-    @JsonProperty(value = "lastName")
-    @Accessors(fluent = true)
-    private String lastName;
+    private String userName;
 
     @JsonProperty(value = "phoneNumber")
     @Accessors(fluent = true)
@@ -27,4 +19,12 @@ public class UpdateUserProfileRequest {
     @JsonProperty(value = "email")
     @Accessors(fluent = true)
     private String email;
+
+    @JsonProperty(value = "myTelusId")
+    @Accessors(fluent = true)
+    private String myTelusId;
+
+    @JsonProperty(value = "status")
+    @Accessors(fluent = true)
+    private ProfileStatus status;
 }

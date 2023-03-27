@@ -2,6 +2,8 @@ package com.telus.dl.profilemanagement.dto.userprofile;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.telus.dl.profilemanagement.document.userprofile.UserProfileType;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -13,33 +15,32 @@ import javax.validation.constraints.Pattern;
 @Getter
 @Setter
 @Accessors(fluent = true)
-public class CreatePrimaryUserProfileRequest {
-    @JsonProperty(value = "firstName", required = true)
-    @NotBlank
-    private String firstName;
+public class CreateUserProfileRequest {
+    @JsonProperty(value = "userProfileType", required = true)
+    @NotNull
+    private UserProfileType userProfileType;
 
-    @JsonProperty(value = "middleName")
-    private String middleName;
-
-    @JsonProperty(value = "lastName", required = true)
+    @JsonProperty(value = "userName", required = true)
     @NotBlank
-    private String lastName;
+    private String userName;
 
     @JsonProperty(value = "phoneNumber", required = true)
-    @NotBlank
     @Pattern(regexp = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$")
     private String phoneNumber;
 
     @JsonProperty(value = "email", required = true)
-    @NotBlank
     @Pattern(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     private String email;
 
-    @JsonProperty(value = "property", required = true)
-    @NotNull
-    private PropertyDto property;
+    @JsonProperty(value = "householdId", required = true)
+    @NotBlank
+    private String householdId;
 
     @JsonProperty(value = "myTelusId")
     @JsonPropertyDescription("set when accept an invitation")
     private String myTelusId;
+
+    @JsonProperty(value = "linkedUserProfileId")
+    @JsonPropertyDescription("it is mandatory when the user profile is of type LINK")
+    private String linkedUserProfileId;
 }

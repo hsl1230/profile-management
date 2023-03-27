@@ -4,14 +4,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @Setter
 @Builder
 public class VerticalRoleId {
-    @NotNull
+    @NotBlank
     private String verticalId;
-    @NotNull
+    @NotBlank
     private String roleCode;
 }

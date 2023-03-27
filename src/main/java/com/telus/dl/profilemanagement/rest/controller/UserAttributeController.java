@@ -28,89 +28,19 @@ public class UserAttributeController {
     }
 
     @Operation(
-            tags = {"User Public Attribute"},
-            summary = "create a public user attribute"
+            tags = {"User Attribute"},
+            summary = "create a user attribute"
     )
-    @PostMapping("/public-attributes")
-    public UserAttributeDto createPublicUserAttribute(
+    @PostMapping("")
+    public UserAttributeDto createUserAttribute(
             @PathVariable("userProfileId") String userProfileId,
             @Valid @RequestBody AttributeDto attributeDto) {
-        return userAttributeService.createPublicUserAttribute(userProfileId, attributeDto);
-    }
-
-    @Operation(
-            tags = {"User Public Attribute"},
-            summary = "get a public user attribute by name"
-    )
-    @GetMapping("/public-attributes/{name}")
-    public UserAttributeDto findPublicUserAttribute(
-            @PathVariable("userProfileId") String userProfileId,
-            @PathVariable("name") String name) {
-        return userAttributeService.findPublicUserAttributeById(userProfileId, name);
-    }
-
-    @Operation(
-            tags = {"User Public Attribute"},
-            summary = "get all public user attributes of a user profile"
-    )
-    @GetMapping("/public-attributes")
-    public List<UserAttributeDto> findPublicUserAttributes(
-            @PathVariable("userProfileId") String userProfileId) {
-        return userAttributeService.findPublicUserAttributesByUserProfile(userProfileId);
-    }
-
-    @Operation(
-            tags = {"User Private Attribute"},
-            summary = "create a private user attribute",
-            description = "private attributes are encrypted when saved in the db."
-    )
-    @PostMapping("/private-attributes")
-    public void createPrivateUserAttribute(
-            @PathVariable("userProfileId") String userProfileId,
-            @Valid @RequestBody AttributeDto attributeDto) {
-        userAttributeService.createPrivateAttribute(userProfileId, attributeDto);
-    }
-
-    @Operation(
-            tags = {"User Private Attribute"},
-            summary = "get a private user attribute by name",
-            description = "private attribute is decrypted when fetched from the db"
-    )
-    @GetMapping("/private-attributes/{name}")
-    public UserAttributeDto findPrivateUserAttribute(
-            @PathVariable("userProfileId") String userProfileId,
-            @PathVariable("name") String name) {
-        return userAttributeService.findPrivateUserAttributeById(userProfileId, name);
-    }
-
-    @Operation(
-            tags = {"User Private Attribute"},
-            summary = "get all private user attributes of a user profile",
-            description = "private attributes are decrypted when fetched from the db"
-    )
-    @GetMapping("/private-attributes")
-    public List<UserAttributeDto> findPrivateUserAttributes(
-            @PathVariable("userProfileId") String userProfileId) {
-        return userAttributeService.findPrivateUserAttributesByUserProfile(userProfileId);
-    }
-
-    @Operation(
-            tags = {"User Private Attribute"},
-            summary = "verify a private user attribute",
-            description = "The value to be compared will be encrypted before compared with the encrypted value in the database."
-    )
-    @PutMapping("/private-attributes/{name}/verify")
-    public void verifyPrivateUserAttribute(
-            @PathVariable("userProfileId") String userProfileId,
-            @PathVariable("name") String name,
-            @Valid @RequestBody Object value) {
-        userAttributeService.verifyPrivateAttribute(userProfileId, name, value);
+        return userAttributeService.createUserAttribute(userProfileId, attributeDto);
     }
 
     @Operation(
             tags = {"User Attribute"},
-            summary = "get a user attribute by name",
-            description = "include public and private attribute, private attribute will not be decrypted when fetched from the db"
+            summary = "get an user attribute by name"
     )
     @GetMapping("/{name}")
     public UserAttributeDto findUserAttribute(
@@ -121,19 +51,29 @@ public class UserAttributeController {
 
     @Operation(
             tags = {"User Attribute"},
-            summary = "get all user attributes of a user profile",
-            description = "include public and private attributes, private attributes will not be decrypted when fetched from the db"
+            summary = "get all user attributes of a user profile"
     )
     @GetMapping("")
-    public List<UserAttributeDto> findAllUserAttributes(
+    public List<UserAttributeDto> findUserAttributes(
             @PathVariable("userProfileId") String userProfileId) {
         return userAttributeService.findAllAttributesByUserProfile(userProfileId);
     }
 
     @Operation(
             tags = {"User Attribute"},
-            summary = "delete a user attribute",
-            description = "include private and public user attributes"
+            summary = "verify a user attribute"
+    )
+    @PutMapping("/{name}/verify")
+    public void verifyPrivateUserAttribute(
+            @PathVariable("userProfileId") String userProfileId,
+            @PathVariable("name") String name,
+            @Valid @RequestBody Object value) {
+        userAttributeService.verifyAttribute(userProfileId, name, value);
+    }
+
+    @Operation(
+            tags = {"User Attribute"},
+            summary = "delete an user attribute"
     )
     @DeleteMapping("/{name}")
     public void deleteUserAttribute(

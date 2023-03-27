@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/profile-management/verticals/{verticalId}/user-profiles/{userProfileId}/enablement")
+@RequestMapping("/api/profile-management/user-profiles/{userProfileId}/verticals/{verticalId}/enablement")
 @Validated
 public class UserVerticalEnablementController {
     private final UserVerticalEnablementService userVerticalEnablementService;

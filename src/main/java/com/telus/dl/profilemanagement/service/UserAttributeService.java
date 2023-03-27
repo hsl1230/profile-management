@@ -30,15 +30,15 @@ public class UserAttributeService {
         this.modelMapper = modelMapper;
     }
 
-    public UserAttributeDto createPublicUserAttribute(
+    public UserAttributeDto createUserAttribute(
             String userProfileId,
             AttributeDto attributeDto) {
         userProfileService.assertUserProfileExists(userProfileId);
 
         UserAttribute userAttribute = new UserAttribute()
                 .id(UserAttributeId.builder().userProfileId(userProfileId).name(attributeDto.getName()).build())
-                .isPrivate(false)
-                .value(attributeDto.getValue());
+                .isSensitive(attributeDto.isSensitive())
+                .value(attributeDto.isSensitive()? encrypt(attributeDto.getValue()) : attributeDto.getValue());
 
         userAttribute = userAttributeRepository.save(userAttribute);
         return modelMapper.map(userAttribute, UserAttributeDto.class);
@@ -48,76 +48,67 @@ public class UserAttributeService {
         return cryptService.encrypt(value);
     }
 
-    public void createPrivateAttribute(
-            String userProfileId,
-            AttributeDto attributeDto) {
-        userProfileService.assertUserProfileExists(userProfileId);
-
-        UserAttribute userAttribute = new UserAttribute()
-                .id(UserAttributeId.builder().userProfileId(userProfileId).name(attributeDto.getName()).build())
-                .isPrivate(true)
-                .value(encrypt(attributeDto.getValue()));
-
-        userAttributeRepository.save(userAttribute);
-    }
-
+    /**
+     * delete a user attribute
+     * @param userProfileId user profile id
+     * @param name attribute name
+     */
     public void deleteUserAttribute(String userProfileId, String name) {
         userAttributeRepository.deleteById(
                 UserAttributeId.builder().userProfileId(userProfileId).name(name).build());
     }
 
-    private UserAttribute findPureUserAttributeById(String userProfileId, String name, boolean isPrivate) {
-        return userAttributeRepository
-                .findByIdAndIsPrivate(UserAttributeId.builder().userProfileId(userProfileId).name(name).build(), isPrivate)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "No user attribute found for userProfileId=" + userProfileId + ", name=" + name + ", isPrivate=" + isPrivate));
-    }
-
-    public UserAttributeDto findPublicUserAttributeById(String userProfileId, String name) {
-        return modelMapper.map(findPureUserAttributeById(userProfileId, name, false), UserAttributeDto.class);
-    }
-
-    public UserAttributeDto findUserAttributeById(String userProfileId, String name) {
+    private UserAttribute findPureUserAttributeById(String userProfileId, String name) {
         return userAttributeRepository
                 .findById(UserAttributeId.builder().userProfileId(userProfileId).name(name).build())
-                .map(userAttribute -> modelMapper.map(userAttribute, UserAttributeDto.class))
                 .orElseThrow(() -> new EntityNotFoundException(
                         "No user attribute found for userProfileId=" + userProfileId + ", name=" + name));
     }
 
-    public UserAttributeDto findPrivateUserAttributeById(String userProfileId, String name) {
-        UserAttribute userAttribute = findPureUserAttributeById(userProfileId, name, true);
-        userAttribute.value(cryptService.decrypt((String)userAttribute.value()));
+    /**
+     * find a user profile by id.
+     * @param userProfileId user profile id
+     * @param name attribute name
+     * @return value of UserAttributeDto
+     */
+    public UserAttributeDto findUserAttributeById(String userProfileId, String name) {
+        UserAttribute userAttribute = findPureUserAttributeById(userProfileId, name);
+        if (userAttribute.isSensitive()) {
+            userAttribute.value(cryptService.decrypt(userAttribute.value()));
+        }
         return modelMapper.map(userAttribute, UserAttributeDto.class);
     }
 
-    public List<UserAttributeDto> findPublicUserAttributesByUserProfile(String userProfileId) {
-        return userAttributeRepository
-                .findByIdUserProfileIdAndIsPrivate(userProfileId, false)
-                .stream()
-                .map(userAttribute -> modelMapper.map(userAttribute, UserAttributeDto.class))
-                .toList();
-    }
-
-    public List<UserAttributeDto> findPrivateUserAttributesByUserProfile(String userProfileId) {
-        return userAttributeRepository
-                .findByIdUserProfileIdAndIsPrivate(userProfileId, true)
-                .stream()
-                .map(userAttribute -> modelMapper.map(userAttribute.value(cryptService.decrypt(userAttribute.value())),
-                        UserAttributeDto.class))
-                .toList();
-    }
-
+    /**
+     * @param userProfileId user profile id
+     * @return a list of UserAttributeDto
+     */
     public List<UserAttributeDto> findAllAttributesByUserProfile(String userProfileId) {
         return userAttributeRepository
                 .findByIdUserProfileId(userProfileId)
                 .stream()
-                .map(userAttribute -> modelMapper.map(userAttribute, UserAttributeDto.class))
+                .map(userAttribute -> {
+                    if (userAttribute.isSensitive()) {
+                        userAttribute.value(cryptService.decrypt(userAttribute.value()));
+                    }
+                    return modelMapper.map(userAttribute, UserAttributeDto.class);
+                })
                 .toList();
     }
 
-    public boolean verifyPrivateAttribute(String userProfileId, String name, Object value) {
-        UserAttribute userAttribute = findPureUserAttributeById(userProfileId, name, true);
-        return encrypt(value).equals(userAttribute.value());
+    /**
+     * verify attribute.
+     * @param userProfileId user profile id
+     * @param name attribute name
+     * @param value attribute value
+     * @return a boolean
+     */
+    public boolean verifyAttribute(String userProfileId, String name, Object value) {
+        UserAttribute userAttribute = findPureUserAttributeById(userProfileId, name);
+        if (userAttribute.isSensitive()) {
+            return encrypt(value).equals(userAttribute.value());
+        } else {
+            return value.equals(userAttribute.value());
+        }
     }
 }

@@ -1,9 +1,8 @@
 package com.telus.dl.profilemanagement.service;
 
-import com.telus.dl.profilemanagement.document.userprofile.PrimaryUserProfile;
-import com.telus.dl.profilemanagement.dto.userprofile.AddressDto;
-import com.telus.dl.profilemanagement.dto.userprofile.CreatePrimaryUserProfileRequest;
-import com.telus.dl.profilemanagement.dto.userprofile.PropertyDto;
+import com.telus.dl.profilemanagement.document.userprofile.UserProfile;
+import com.telus.dl.profilemanagement.document.userprofile.UserProfileType;
+import com.telus.dl.profilemanagement.dto.userprofile.CreateUserProfileRequest;
 import com.telus.dl.profilemanagement.util.MockModelMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,32 +32,20 @@ public class UserProfileServiceTest {
 
 	@BeforeEach
 	public void setUp() throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-		when(mongoTemplate.insert(any(PrimaryUserProfile.class))).thenReturn(
-				new PrimaryUserProfile()
+		when(mongoTemplate.insert(any(UserProfile.class))).thenReturn(
+				new UserProfile()
 		);
 	}
 
 	@Test
 	public void testCreatePrimaryUserProfile() {
-		CreatePrimaryUserProfileRequest createPrimaryUserProfileRequest = new CreatePrimaryUserProfileRequest()
-				.firstName("henry")
-				.lastName("huang")
+		CreateUserProfileRequest createPrimaryUserProfileRequest = new CreateUserProfileRequest()
+				.userName("henry")
 				.email("henry.huang@telus.com")
 				.phoneNumber("4039266729")
-				.myTelusId("T982127")
-				.property(new PropertyDto()
-						.name("home1")
-						.address(
-								new AddressDto()
-										.street("191 mt reliant")
-										.city("calgary")
-										.province("alberta")
-										.country("canada")
-										.postCode("T2Z 2G2")
-						)
-						.description("primary home")
-				);
+				.userProfileType(UserProfileType.PRIMARY)
+				.myTelusId("T982127");
 
-		assertNotNull(this.userProfileService.createPrimaryUserProfile(createPrimaryUserProfileRequest));
+		assertNotNull(this.userProfileService.createUserProfile(createPrimaryUserProfileRequest));
 	}
 }

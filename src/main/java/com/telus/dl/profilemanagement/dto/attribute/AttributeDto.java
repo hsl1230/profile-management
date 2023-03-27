@@ -3,7 +3,6 @@ package com.telus.dl.profilemanagement.dto.attribute;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -19,4 +18,7 @@ public class AttributeDto {
     @JsonProperty(value = "value", required = true)
     @NotNull
     private Object value;
+
+    @JsonProperty(value = "isSensitive", required = true)
+    private boolean isSensitive;
 }

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/profile-management/verticals/{verticalId}/user-profiles/{userProfileId}/permissions")
+@RequestMapping("/api/profile-management/user-profiles/{userProfileId}/verticals/{verticalId}/permissions")
 @Validated
 public class UserVerticalPermissionController {
     private final UserVerticalPermissionService userVerticalPermissionService;

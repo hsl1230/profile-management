@@ -2,10 +2,8 @@ package com.telus.dl.profilemanagement.service;
 
 import com.telus.dl.profilemanagement.document.UserVerticalId;
 import com.telus.dl.profilemanagement.document.permission.UserVerticalPermission;
-import com.telus.dl.profilemanagement.document.permission.VerticalRolePermission;
 import com.telus.dl.profilemanagement.dto.permission.PermissionDto;
 import com.telus.dl.profilemanagement.dto.permission.UserVerticalPermissionDto;
-import com.telus.dl.profilemanagement.dto.permission.VerticalRolePermissionDto;
 import com.telus.dl.profilemanagement.repository.UserVerticalPermissionRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

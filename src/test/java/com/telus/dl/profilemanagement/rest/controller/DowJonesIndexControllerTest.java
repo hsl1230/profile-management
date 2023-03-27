@@ -1,9 +1,5 @@
 package com.telus.dl.profilemanagement.rest.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
-
 public class DowJonesIndexControllerTest {
 
 //	@Mock
