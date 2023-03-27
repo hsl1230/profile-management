@@ -65,17 +65,21 @@ public class UserAttributeService {
                         "No user attribute found for userProfileId=" + userProfileId + ", name=" + name));
     }
 
+    private void decrypt(UserAttribute userAttribute, boolean decrypt) {
+        if (decrypt && userAttribute.isSensitive()) {
+            userAttribute.value(cryptService.decrypt(userAttribute.value()));
+        }
+    }
+
     /**
      * find a user profile by id.
      * @param userProfileId user profile id
      * @param name attribute name
      * @return value of UserAttributeDto
      */
-    public UserAttributeDto findUserAttributeById(String userProfileId, String name) {
+    public UserAttributeDto findUserAttributeById(String userProfileId, String name, boolean decrypt) {
         UserAttribute userAttribute = findPureUserAttributeById(userProfileId, name);
-        if (userAttribute.isSensitive()) {
-            userAttribute.value(cryptService.decrypt(userAttribute.value()));
-        }
+        decrypt(userAttribute, decrypt);
         return modelMapper.map(userAttribute, UserAttributeDto.class);
     }
 
@@ -83,14 +87,12 @@ public class UserAttributeService {
      * @param userProfileId user profile id
      * @return a list of UserAttributeDto
      */
-    public List<UserAttributeDto> findAllAttributesByUserProfile(String userProfileId) {
+    public List<UserAttributeDto> findAllAttributesByUserProfile(String userProfileId, boolean decrypt) {
         return userAttributeRepository
                 .findByIdUserProfileId(userProfileId)
                 .stream()
                 .map(userAttribute -> {
-                    if (userAttribute.isSensitive()) {
-                        userAttribute.value(cryptService.decrypt(userAttribute.value()));
-                    }
+                    decrypt(userAttribute, decrypt);
                     return modelMapper.map(userAttribute, UserAttributeDto.class);
                 })
                 .toList();

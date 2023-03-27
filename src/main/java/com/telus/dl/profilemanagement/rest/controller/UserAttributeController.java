@@ -4,6 +4,9 @@ import com.telus.dl.profilemanagement.dto.attribute.AttributeDto;
 import com.telus.dl.profilemanagement.dto.attribute.UserAttributeDto;
 import com.telus.dl.profilemanagement.service.UserAttributeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -45,8 +49,14 @@ public class UserAttributeController {
     @GetMapping("/{name}")
     public UserAttributeDto findUserAttribute(
             @PathVariable("userProfileId") String userProfileId,
-            @PathVariable("name") String name) {
-        return userAttributeService.findUserAttributeById(userProfileId, name);
+            @PathVariable("name") String name,
+            @Parameter(
+                name = "decrypt",
+                in = ParameterIn.QUERY,
+                description = "whether there is a need to decrypt the value, default is false",
+                required = false
+              ) @RequestParam(value = "decrypt", required = false) boolean decrypt) {
+        return userAttributeService.findUserAttributeById(userProfileId, name, decrypt);
     }
 
     @Operation(
@@ -55,8 +65,14 @@ public class UserAttributeController {
     )
     @GetMapping("")
     public List<UserAttributeDto> findUserAttributes(
-            @PathVariable("userProfileId") String userProfileId) {
-        return userAttributeService.findAllAttributesByUserProfile(userProfileId);
+            @PathVariable("userProfileId") String userProfileId,
+            @Parameter(
+                name = "decrypt",
+                in = ParameterIn.QUERY,
+                description = "whether there is a need to decrypt the value, default is false",
+                required = false
+              ) @RequestParam(value = "decrypt", required = false) boolean decrypt) {
+        return userAttributeService.findAllAttributesByUserProfile(userProfileId, decrypt);
     }
 
     @Operation(
