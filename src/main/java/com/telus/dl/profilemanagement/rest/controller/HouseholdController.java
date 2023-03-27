@@ -57,7 +57,7 @@ public class HouseholdController {
   public List<HouseholdDto> findHouseholds(
     @Parameter(
       name = "customerId",
-      in = ParameterIn.QUERY,
+      in = ParameterIn.PATH,
       description = "Customer Id",
       required = false
     ) @PathVariable(value = "customerId", required = true) String customerId
@@ -74,7 +74,7 @@ public class HouseholdController {
   public HouseholdDto createHousehold(
     @Parameter(
       name = "customerId",
-      in = ParameterIn.QUERY,
+      in = ParameterIn.PATH,
       description = "Customer Id",
       required = false
     ) @PathVariable(value = "customerId", required = true) String customerId,
