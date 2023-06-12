@@ -19,7 +19,7 @@ public class UserVerticalEnablementDto {
     @NotBlank
     private String userProfileId;
 
-    @JsonProperty(value = "userName", required = true)
+    @JsonProperty(value = "profileName", required = true)
     @NotBlank
     private String userName;
 

@@ -11,5 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserAttributeId {
     private String userProfileId;
+    private String verticalId;
     private String name;
 }

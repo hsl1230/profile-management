@@ -21,4 +21,7 @@ public class AttributeDto {
 
     @JsonProperty(value = "isSensitive", required = true)
     private boolean isSensitive;
+
+    @JsonProperty(value = "verticalId")
+    private String verticalId;
 }

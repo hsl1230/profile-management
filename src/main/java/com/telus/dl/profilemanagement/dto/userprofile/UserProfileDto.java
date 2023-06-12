@@ -21,7 +21,7 @@ public class UserProfileDto {
     @NotBlank
     private UserProfileType userProfileType;
 
-    @JsonProperty(value = "userName", required = true)
+    @JsonProperty(value = "profileName", required = true)
     @NotBlank
     private String userName;
 

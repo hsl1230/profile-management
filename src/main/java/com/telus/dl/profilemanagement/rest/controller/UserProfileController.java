@@ -40,7 +40,7 @@ public class UserProfileController {
 
   @Operation(
     tags = { "User Profile" },
-    summary = "get a list of user profiles of types specified profileTypes in related to the specified myTelusId, linkedUserProfile or householdId",
+    summary = "get a list of user profiles of types specified profileTypes in related to the specified customerId, linkedUserProfile or householdId",
     description = "a list mixing of primary user profiles, sub user profiles and linked user profiles",
     responses = {
       @ApiResponse(
@@ -58,11 +58,11 @@ public class UserProfileController {
   @GetMapping
   public List<UserProfileDto> findUserProfiles(
     @Parameter(
-      name = "myTelusId",
+      name = "customerId",
       in = ParameterIn.QUERY,
-      description = "MyTelusUser Id",
+      description = "Customer Id",
       required = false
-    ) @RequestParam(value = "myTelusId", required = false) String myTelusId,
+    ) @RequestParam(value = "customerId", required = false) String customerId,
     @Parameter(
       name = "linkedUserProfileId",
       in = ParameterIn.QUERY,
@@ -89,7 +89,7 @@ public class UserProfileController {
     ) List<UserProfileType> userProfileTypes
   ) {
     return userProfileService.findUserProfiles(
-      myTelusId,
+      customerId,
       linkedUserProfileId,
       userProfileTypes,
       householdId

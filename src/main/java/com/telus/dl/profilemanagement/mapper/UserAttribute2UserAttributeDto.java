@@ -14,5 +14,6 @@ public class UserAttribute2UserAttributeDto
         map().getAttribute().setName(source.id().getName());
         map().getAttribute().setValue(source.value());
         map().getAttribute().setSensitive(source.isSensitive());
+        map().getAttribute().setVerticalId(source.id().getVerticalId());
     }
 }
