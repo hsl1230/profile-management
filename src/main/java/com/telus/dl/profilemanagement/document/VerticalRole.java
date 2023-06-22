@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 
-@Document(collection = "vertical")
+@Document(collection = "vertical-role")
 @Getter
 @Setter
 public class VerticalRole {

@@ -10,7 +10,7 @@ public class VerticalRolePermission2VerticalRolePermissionDto
         extends PropertyMap<VerticalRolePermission, VerticalRolePermissionDto> {
     @Override
     protected void configure() {
-        map().setVerticalId(source.verticalRoleId().getVerticalId());
-        map().setRoleCode(source.verticalRoleId().getRoleCode());
+        map().setVerticalId(source.verticalRoleId().verticalId());
+        map().setRoleCode(source.verticalRoleId().roleCode());
     }
 }

@@ -34,7 +34,7 @@ public class VerticalRoleService {
         verticalService.assertVerticalExists(verticalId);
 
         VerticalRole verticalRole = modelMapper.map(createVerticalRoleRequest, VerticalRole.class);
-        verticalRole.getId().setVerticalId(verticalId);
+        verticalRole.getId().verticalId(verticalId);
         verticalRole = verticalRoleRepository.save(verticalRole);
         return modelMapper.map(verticalRole, VerticalRoleDto.class);
     }
