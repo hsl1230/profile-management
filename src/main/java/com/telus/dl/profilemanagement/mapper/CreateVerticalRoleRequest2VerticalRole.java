@@ -12,6 +12,6 @@ public class CreateVerticalRoleRequest2VerticalRole
     @Override
     protected void configure() {
         map().setId(
-            VerticalRoleId.builder().build().roleCode(source.roleCode()));
+            VerticalRoleId.builder().verticalId(source.roleCode()).build());
     }
 }

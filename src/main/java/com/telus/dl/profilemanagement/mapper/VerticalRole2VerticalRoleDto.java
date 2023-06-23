@@ -2,8 +2,6 @@ package com.telus.dl.profilemanagement.mapper;
 
 import com.telus.core.modelmapping.PropertyMapper;
 import com.telus.dl.profilemanagement.document.VerticalRole;
-import com.telus.dl.profilemanagement.document.VerticalRoleId;
-import com.telus.dl.profilemanagement.dto.CreateVerticalRoleRequest;
 import com.telus.dl.profilemanagement.dto.VerticalRoleDto;
 
 import org.modelmapper.PropertyMap;
