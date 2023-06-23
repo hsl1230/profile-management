@@ -1,5 +1,6 @@
 package com.telus.dl.profilemanagement.document;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @Builder
 @Accessors(fluent = true)
+@AllArgsConstructor
 public class VerticalRoleId {
     @NotBlank
     private String verticalId;

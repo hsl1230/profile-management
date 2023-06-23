@@ -2,7 +2,6 @@ package com.telus.dl.profilemanagement.mapper;
 
 import com.telus.core.modelmapping.PropertyMapper;
 import com.telus.dl.profilemanagement.document.VerticalRole;
-import com.telus.dl.profilemanagement.document.VerticalRoleId;
 import com.telus.dl.profilemanagement.dto.CreateVerticalRoleRequest;
 import org.modelmapper.PropertyMap;
 
@@ -11,7 +10,6 @@ public class CreateVerticalRoleRequest2VerticalRole
         extends PropertyMap<CreateVerticalRoleRequest, VerticalRole> {
     @Override
     protected void configure() {
-        map().setId(
-            VerticalRoleId.builder().verticalId(source.roleCode()).build());
+        map().getId().roleCode(source.roleCode());
     }
 }
