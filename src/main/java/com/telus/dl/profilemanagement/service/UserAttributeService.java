@@ -6,6 +6,8 @@ import com.telus.dl.profilemanagement.document.attribute.UserAttributeId;
 import com.telus.dl.profilemanagement.dto.attribute.AttributeDto;
 import com.telus.dl.profilemanagement.dto.attribute.UserAttributeDto;
 import com.telus.dl.profilemanagement.repository.UserAttributeRepository;
+
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +38,11 @@ public class UserAttributeService {
         userProfileService.assertUserProfileExists(userProfileId);
 
         UserAttribute userAttribute = new UserAttribute()
-                .id(UserAttributeId.builder().userProfileId(userProfileId).name(attributeDto.getName()).build())
+                .id(UserAttributeId.builder()
+                    .userProfileId(userProfileId)
+                    .name(attributeDto.getName())
+                    .verticalId(attributeDto.getVerticalId())
+                    .build())
                 .isSensitive(attributeDto.isSensitive())
                 .value(attributeDto.isSensitive()? encrypt(attributeDto.getValue()) : attributeDto.getValue());
 
@@ -58,11 +64,28 @@ public class UserAttributeService {
                 UserAttributeId.builder().userProfileId(userProfileId).name(name).build());
     }
 
-    private UserAttribute findPureUserAttributeById(String userProfileId, String name) {
+    private UserAttribute findPUserAttributeByIdWithoutVerticalId(String userProfileId, String name, String verticalId) {
         return userAttributeRepository
-                .findById(UserAttributeId.builder().userProfileId(userProfileId).name(name).build())
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "No user attribute found for userProfileId=" + userProfileId + ", name=" + name));
+                    .findById(UserAttributeId.builder()
+                        .userProfileId(userProfileId)
+                        .name(name)
+                        .build())
+                    .orElseThrow(() -> new EntityNotFoundException(
+                            "No user attribute found for userProfileId=" + userProfileId + ", name=" + name + ", verticalId=" + verticalId));
+    }
+
+    private UserAttribute findPureUserAttributeById(String userProfileId, String name, String verticalId) {
+        if (StringUtils.isBlank(verticalId)) {
+            return findPUserAttributeByIdWithoutVerticalId(userProfileId, name, verticalId);
+        } else {
+            return userAttributeRepository
+                    .findById(UserAttributeId.builder()
+                        .userProfileId(userProfileId)
+                        .name(name)
+                        .verticalId(verticalId)
+                        .build())
+                    .orElse(findPUserAttributeByIdWithoutVerticalId(userProfileId, name, verticalId));
+        }
     }
 
     private void decrypt(UserAttribute userAttribute, boolean decrypt) {
@@ -77,8 +100,8 @@ public class UserAttributeService {
      * @param name attribute name
      * @return value of UserAttributeDto
      */
-    public UserAttributeDto findUserAttributeById(String userProfileId, String name, boolean decrypt) {
-        UserAttribute userAttribute = findPureUserAttributeById(userProfileId, name);
+    public UserAttributeDto findUserAttributeById(String userProfileId, String name, String verticalId, boolean decrypt) {
+        UserAttribute userAttribute = findPureUserAttributeById(userProfileId, name, verticalId);
         decrypt(userAttribute, decrypt);
         return modelMapper.map(userAttribute, UserAttributeDto.class);
     }
@@ -105,8 +128,8 @@ public class UserAttributeService {
      * @param value attribute value
      * @return a boolean
      */
-    public boolean verifyAttribute(String userProfileId, String name, Object value) {
-        UserAttribute userAttribute = findPureUserAttributeById(userProfileId, name);
+    public boolean verifyAttribute(String userProfileId, String name, String verticalId, Object value) {
+        UserAttribute userAttribute = findPureUserAttributeById(userProfileId, name, verticalId);
         if (userAttribute.isSensitive()) {
             return encrypt(value).equals(userAttribute.value());
         } else {

@@ -51,12 +51,18 @@ public class UserAttributeController {
             @PathVariable("userProfileId") String userProfileId,
             @PathVariable("name") String name,
             @Parameter(
+                name = "verticalId",
+                in = ParameterIn.QUERY,
+                description = "vertical id of the attribute",
+                required = false
+              ) @RequestParam(value = "verticalId", required = false) String verticalId,
+            @Parameter(
                 name = "decrypt",
                 in = ParameterIn.QUERY,
                 description = "whether there is a need to decrypt the value, default is false",
                 required = false
               ) @RequestParam(value = "decrypt", required = false) boolean decrypt) {
-        return userAttributeService.findUserAttributeById(userProfileId, name, decrypt);
+        return userAttributeService.findUserAttributeById(userProfileId, name, verticalId, decrypt);
     }
 
     @Operation(
@@ -83,8 +89,14 @@ public class UserAttributeController {
     public void verifyPrivateUserAttribute(
             @PathVariable("userProfileId") String userProfileId,
             @PathVariable("name") String name,
+            @Parameter(
+                name = "verticalId",
+                in = ParameterIn.QUERY,
+                description = "vertical id of the attribute",
+                required = false
+              ) @RequestParam(value = "verticalId", required = false) String verticalId,
             @Valid @RequestBody Object value) {
-        userAttributeService.verifyAttribute(userProfileId, name, value);
+        userAttributeService.verifyAttribute(userProfileId, name, verticalId, value);
     }
 
     @Operation(
